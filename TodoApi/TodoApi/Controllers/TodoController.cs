@@ -28,8 +28,7 @@ namespace TodoApi.Controllers
         {
             var query = dbContext.TodoItems
                 .Where(t => t.OwnerId == UserId);
-            if (listId != null)
-                query = query.Where(t => t.ListId == listId);
+            query = query.Where(t => t.ListId == listId);
             var todos = await query.Select(t=>t.Map()).ToListAsync();
             return Ok(todos);
         }

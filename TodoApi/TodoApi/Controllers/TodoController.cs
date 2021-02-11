@@ -70,7 +70,7 @@ namespace TodoApi.Controllers
             return Ok(ret.Entity.Map());
         }
         [Authorize]
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> UpdateTodo([FromRoute] long id, [FromBody] TodoDto item)
         {
             var db = await dbContext.TodoItems
@@ -83,7 +83,7 @@ namespace TodoApi.Controllers
                 return Forbid();
             var list = await dbContext.TodoLists
                 .FirstOrDefaultAsync(l => l.Id == item.ListId);
-            if (list == null)
+            if (list == null && item.ListId!=null)
                 return Conflict();
             db.Important = item.Important;
             db.Title = item.Title;

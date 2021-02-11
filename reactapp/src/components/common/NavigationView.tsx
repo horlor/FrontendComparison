@@ -33,7 +33,6 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     display: "flex",
-    backgroundColor: "#026173"
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -138,7 +137,7 @@ const NavigationView : React.FC<IProps> = (props) => {
             </Drawer>
           </Hidden>
         </nav>
-      <Box height="100%" width="100%" display="flex" flexDirection="column" justifyContent="start">
+      <Box height="100%" width="100%" display="flex" flexDirection="column" justifyContent="start" style={{backgroundColor:"whitesmoke"}}>
         <div className={classes.toolbar}/>
         <Box display="flex" justifyItems="center" justifyContent="center" height="100%"  width="100%">
           {props.children}

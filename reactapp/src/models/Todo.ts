@@ -4,7 +4,7 @@ export interface Todo{
 	description?: string,
 	important: boolean,
 	done: boolean,
-	deadLine: string,
+	deadLine: string | null,
 	ownerId: string | null,
 	listId: string | null,
 }

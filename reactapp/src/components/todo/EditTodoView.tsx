@@ -1,7 +1,9 @@
 import { Box, Button, Dialog, Drawer, makeStyles } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
+import { DatePicker } from "@material-ui/pickers";
+import dayjs, { Dayjs } from "dayjs";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useTodoEdit } from "../../hooks/TodoHooks";
 import { Todo } from "../../models/Todo";
 
@@ -28,24 +30,13 @@ interface IProps{
 
 interface IFormData{
 	name:string,
-	deadline:string,
 	description: string,
 }
 
-function DateToInput(date: string | undefined | null){
-	if(!date)
-		return ""
-	const dateObj = new Date(Date.parse(date));
-	const day = dateObj.getDate()
-	const month = dateObj.getMonth()
-	const year = dateObj.getFullYear()
-	return `${year}-${month<10?'0':''}${month}-${day<10?'0':''}${day}`
-
-}
-
 const EditTodoView : React.FC<IProps> = props =>{
-	const {register, handleSubmit} = useForm({defaultValues:props.todo})
+	const {register, handleSubmit, control} = useForm({defaultValues:props.todo})
 	const [open, setOpen] = useState(false);
+	const [date, setDate] = useState<string | null>(props.todo.deadLine)
 	const mutation = useTodoEdit()
 	const classes = useStyles();
 
@@ -54,7 +45,8 @@ const EditTodoView : React.FC<IProps> = props =>{
 	}
 
 	function onSubmit(data: IFormData){
-		mutation.mutate({...props.todo, ...data})
+		mutation.mutate({...props.todo, ...data, deadLine:date})
+
 		setOpen(false);
 	}
 
@@ -70,11 +62,11 @@ const EditTodoView : React.FC<IProps> = props =>{
 				className={classes.field}
 				inputRef={register}
 			/>
-			<input
-				type="date"
-				className={classes.field}
-				name="deadLine"
-				//ref={register}
+			<DatePicker
+			clearable
+			label="Deadline"
+			value={date}
+			onChange={e => setDate(e?e.toISOString():null)}
 			/>
 			<TextField
 				label="Notes"

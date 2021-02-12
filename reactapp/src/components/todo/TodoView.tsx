@@ -5,10 +5,14 @@ import Done from '@material-ui/icons/Done';
 import RadioButtonUncheckedIcon from '@material-ui/icons/RadioButtonUnchecked';
 import { CheckCircleOutlined, Delete, Edit, ExpandLess, ExpandMore } from "@material-ui/icons";
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import LabelImportantIcon from '@material-ui/icons/LabelImportant';
 import EditTodoView from "./EditTodoView";
 
 import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
 import { withStyles } from "@material-ui/core/styles";
+import dayjs from "dayjs";
+import DeleteTodoDialog from "./DeleteTodoDialog";
+import { useTodo } from "../../hooks/TodoHooks";
 
 const AccordionSummary = withStyles({
   root: {
@@ -44,21 +48,32 @@ const useStylesForShort = makeStyles(theme =>({
 const ShortTodoView : React.FC<{todo:Todo}> = (props)=>{
 	const classes = useStylesForShort()
 	const todo = props.todo;
+	const {doneMutation, importantMutation} = useTodo()
 	return(
 	<>
-		<IconButton>
+		<IconButton onClick={()=> doneMutation.mutate(todo)}>
 					{todo.done?<CheckCircleOutlined className={classes.done}/>:<RadioButtonUncheckedIcon/>}
 		</IconButton>
 		<Box flexGrow={1}>
-			<Typography variant="subtitle1">{todo.title}</Typography>
+			<IconButton onClick={()=> importantMutation.mutate(todo)}><LabelImportantIcon style={todo.important?{color:"blue"}:{}} /></IconButton>
+			<Typography variant="subtitle1" component="span">{todo.title}</Typography>
 			<Box display="flex" alignItems="center">
-				<Icon className={classes.icon} fontSize="small"><EventAvailableIcon/></Icon>
-				<Typography variant="caption" component="span">{todo.deadLine?new Date(Date.parse(todo.deadLine)).toLocaleDateString():""}</Typography>
+				{todo.deadLine?
+					<>
+						<Icon className={classes.icon} fontSize="small"><EventAvailableIcon/></Icon>
+						<Typography variant="caption" component="span">{dayjs(todo.deadLine).format("YYYY. MM. DD.")}</Typography>
+					</>
+					:""
+				}
+
 				<Box flexGrow={1}/>
 				<EditTodoView todo={props.todo} 
 				opener={ open => <IconButton className={classes.button} onClick={open}><Edit/></IconButton>}
 				/>
-				<IconButton className={classes.button}><Delete/></IconButton>
+				<DeleteTodoDialog todo={props.todo}
+				opener={ open => <IconButton className={classes.button} onClick={open}><Delete/></IconButton> }
+				/>
+				
 			</Box>
 		</Box>
 	</>

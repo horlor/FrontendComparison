@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import TodoPage from './components/pages/TodoPage';
 import AuthService from './api/AuthService';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DayJsUtils from "@date-io/dayjs"
 
 AuthService.init();
 const queryClient = new QueryClient()
@@ -12,10 +14,12 @@ const queryClient = new QueryClient()
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Route path="/" exact component={TodoPage}/>
-        <Route path="/:id" component={TodoPage}/>
-      </BrowserRouter>
+      <MuiPickersUtilsProvider utils={DayJsUtils}>
+        <BrowserRouter>
+          <Route path="/" exact component={TodoPage}/>
+          <Route path="/:id" component={TodoPage}/>
+        </BrowserRouter>
+      </MuiPickersUtilsProvider>
     </QueryClientProvider>
 
   );

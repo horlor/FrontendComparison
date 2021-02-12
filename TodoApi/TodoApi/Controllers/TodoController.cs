@@ -62,7 +62,7 @@ namespace TodoApi.Controllers
                 Important = todo.Important,
                 ListId = todo.ListId,
                 Title = todo.Title,
-                OwnerId = todo.OwnerId
+                OwnerId = UserId,
             };
 
             var ret = dbContext.TodoItems.Add(db);

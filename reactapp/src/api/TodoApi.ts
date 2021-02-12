@@ -17,3 +17,13 @@ export async function AddTodo(todo: Todo) {
 export async function RemoveTodo(todo: Todo){
 	await axios.delete(`/api/todos/${todo.id}`)
 }
+
+export async function SetTodoDone(todo:Todo) {
+	todo.done = !todo.done;
+	await UpdateTodo(todo);
+}
+
+export async function SwitchTodoImportant(todo: Todo){
+	todo.important = !todo.important;
+	await UpdateTodo(todo);
+}

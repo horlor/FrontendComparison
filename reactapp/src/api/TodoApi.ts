@@ -1,5 +1,7 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { AppError } from "../models/Error";
 import { Todo } from "../models/Todo";
+
 
 export async function GetTodos(listId:number | null){
 	let url = listId?`/api/todos/?listId=${listId}`:"/api/todos/"
@@ -26,4 +28,19 @@ export async function SetTodoDone(todo:Todo) {
 export async function SwitchTodoImportant(todo: Todo){
 	todo.important = !todo.important;
 	await UpdateTodo(todo);
+}
+
+export async function DeleteTodos(important?: boolean, done?:boolean, urgent?: boolean, listId?: number){
+	var query = new URLSearchParams();
+	if(listId)
+		query.append("listId",listId.toString())
+	else
+		query.append("all",true.toString());
+	if(important)
+		query.append("important",important.toString())
+	if(done)
+		query.append("done",done.toString())
+	if(urgent)
+		query.append("urgent",urgent.toString())
+	await axios.delete("/api/todos?"+query.toString())
 }

@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import TodoPage from './components/pages/TodoPage';
-import AuthService from './api/AuthService';
+import AuthService from './api/UserApi';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DayJsUtils from "@date-io/dayjs"

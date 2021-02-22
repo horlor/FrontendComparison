@@ -24,12 +24,18 @@ namespace TodoApi.Controllers
         }
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetMyTodos([FromQuery] long? listId)
+        public async Task<IActionResult> GetMyTodos([FromQuery] bool important = false, [FromQuery] bool urgent=false, [FromQuery] bool all = false, [FromQuery] long? listId = null)
         {
             var query = dbContext.TodoItems
                 .Where(t => t.OwnerId == UserId);
-            query = query.Where(t => t.ListId == listId);
+            if(!all)
+                query = query.Where(t => t.ListId == listId);
+            if (important)
+                query = query.Where(t => t.Important);
+            if (urgent)
+                query = query.Where(t => t.DeadLine < DateTime.Now + new TimeSpan(7, 0, 0, 0));
             var todos = await query.Select(t=>t.Map()).ToListAsync();
+            todos.Reverse();
             return Ok(todos);
         }
         [Authorize]
@@ -107,6 +113,23 @@ namespace TodoApi.Controllers
             if(db.OwnerId != UserId)
                 return Forbid();
             dbContext.TodoItems.Remove(db);
+            await dbContext.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [Authorize]
+        [HttpDelete]
+        public async Task<ActionResult> DeleteTodos([FromQuery] bool important = false, [FromQuery] bool urgent = false, [FromQuery] bool all = false, [FromQuery] long? listId = null, [FromQuery] bool onlyDone = false)
+        {
+            var query = dbContext.TodoItems
+                .Where(t => t.OwnerId == UserId);
+            if (!all)
+                query = query.Where(t => t.ListId == listId);
+            if (important)
+                query = query.Where(t => t.Important);
+            if (urgent)
+                query = query.Where(t => t.DeadLine < DateTime.Now + new TimeSpan(7, 0, 0, 0));
+            dbContext.RemoveRange(query);
             await dbContext.SaveChangesAsync();
             return NoContent();
         }

@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, Drawer, makeStyles } from "@material-ui/core";
+import { Box, Button, Dialog, DialogTitle, Drawer, makeStyles, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
 import { DatePicker } from "@material-ui/pickers";
 import dayjs, { Dayjs } from "dayjs";
@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
 		
 	},
 	form:{
-		padding: theme.spacing(1),
+		padding: theme.spacing(0,2,1),
 		width:"30%",
 		minWidth:"400px",
 		display:"flex",
@@ -34,7 +34,7 @@ interface IFormData{
 }
 
 const EditTodoView : React.FC<IProps> = props =>{
-	const {register, handleSubmit, control} = useForm({defaultValues:props.todo})
+	const {register, handleSubmit} = useForm({defaultValues:props.todo})
 	const [open, setOpen] = useState(false);
 	const [date, setDate] = useState<string | null>(props.todo.deadLine)
 	const mutation = useTodoEdit()
@@ -54,6 +54,7 @@ const EditTodoView : React.FC<IProps> = props =>{
 		<>
 		{props.opener(handleOpen)}
 		<Dialog open={open} className={classes.root}>
+			<DialogTitle>Editing Todo</DialogTitle>
 			<form onSubmit={handleSubmit(onSubmit)} className={classes.form}>
 			<TextField
 				label="Todo"

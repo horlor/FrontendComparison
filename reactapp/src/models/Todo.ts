@@ -6,5 +6,5 @@ export interface Todo{
 	done: boolean,
 	deadLine: string | null,
 	ownerId: string | null,
-	listId: string | null,
+	listId: number | null,
 }

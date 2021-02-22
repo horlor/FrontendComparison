@@ -14,21 +14,24 @@ const useStyles = makeStyles(theme => ({
 	}
 }))
 
+interface IProps{
+	listId: number | null
+}
 
-const AddTodoView : React.FC = props =>{
+
+const AddTodoView : React.FC<IProps> = props =>{
 	const classes = useStyles();
-	const mutation = useTodoAdd(null);
+	const mutation = useTodoAdd(props.listId);
 	const [title, setTitle] = useState("")
 
 	function submit(){
-		mutation.mutate({title:title, id:0, deadLine:null, important:false, done:false, listId: null, ownerId:""})
+		mutation.mutate({title:title, id:0, deadLine:null, important:false, done:false, listId: props.listId, ownerId:""})
 		setTitle("")
 	}
 	return ( 
 		<Paper className={classes.root}>
 			<Box display="flex" >
 				<IconButton
-					type="submit"
 					onClick={submit}
 				>
 					<Add/>
@@ -38,6 +41,7 @@ const AddTodoView : React.FC = props =>{
 					value={title}
 					onChange={e => setTitle(e.target.value)}	
 					className={classes.field}
+					placeholder="What do I have to do? (Press Enter to save)"
 					onKeyDown={e => {
 						if(e.key === "Enter")
 							submit();

@@ -1,7 +1,9 @@
+import { AxiosError } from "axios"
 import { useMutation, useQuery, useQueryClient } from "react-query"
 import { useLocation, useParams } from "react-router-dom"
-import { GetLists } from "../api/ListsApi"
+import { AddList, GetList, GetLists } from "../api/ListsApi"
 import { AddTodo, GetTodos, RemoveTodo, SetTodoDone, SwitchTodoImportant, UpdateTodo } from "../api/TodoApi"
+import { AppError } from "../models/Error"
 import { List } from "../models/List"
 import { Todo } from "../models/Todo"
 
@@ -52,11 +54,21 @@ export const useTodos = ()=>{
 	const queryClient = useQueryClient();
 	const {id} = useParams<{id:string|undefined}>();
 	const listId = id?parseInt(id):null
-	const todoResult = useQuery<Todo[],Error>(["todos",listId],()=>GetTodos(listId))
-	return {todos: todoResult};
+	const listResult = useQuery<List,AppError>(["lists",listId],()=>listId?GetList(listId):{id:0,name:"General",builtIn:true});
+	const todoResult = useQuery<Todo[],AppError>(["todos",listId],()=>GetTodos(listId))
+	return {list: listResult, todos: todoResult};
 }
 
 export const useLists = ()=>{
-	const lists = useQuery<List[],Error>(["lists"],GetLists);
+	const lists = useQuery<List[],AppError>(["lists"],GetLists);
 	return {lists}
+}
+
+export const useListAdd = ()=>{
+	const queryClient = useQueryClient();
+	return useMutation(AddList, {
+		onSuccess:(data,variables,context)=>{
+			queryClient.invalidateQueries(["lists"]);
+		}
+	})
 }

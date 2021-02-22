@@ -34,6 +34,17 @@ namespace TodoApi.Controllers
                 .ToListAsync();
             return Ok(lists);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetList([FromRoute] long id)
+        {
+            var list = await dbcontext.TodoLists
+                .FirstOrDefaultAsync(l=> l.Id == id);
+            if (list == null)
+                return NotFound();
+            return Ok(list.Map());
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddList([FromBody] TodoList list)
         {

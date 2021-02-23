@@ -9,6 +9,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DayJsUtils from "@date-io/dayjs"
 import LoginPage from './components/pages/LoginPage';
 import AuthProvider from './components/auth/AuthContext';
+import RegisterPage from './components/pages/RegisterPage';
 
 const queryClient = new QueryClient()
 
@@ -19,7 +20,8 @@ function App() {
         <BrowserRouter>
         <AuthProvider>
         <Switch>
-        <Route path="/login" exact component={LoginPage}/>
+          <Route path="/register" exact component={RegisterPage}/>
+          <Route path="/login" exact component={LoginPage}/>
           <Route path="/" exact component={TodoPage}/>
           <Route path="/:id" component={TodoPage}/>
           

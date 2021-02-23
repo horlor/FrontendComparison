@@ -15,3 +15,7 @@ export interface LoginResult{
 	expires: Date,
 	token: string,
 }
+
+export interface Session{
+	loggedIn: boolean, username?: string, userId?: string
+}

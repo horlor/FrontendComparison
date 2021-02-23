@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Box from "@material-ui/core/Box";
 import { Link } from 'react-router-dom';
+import LogoutButton from '../auth/LogoutButton';
 
 
 
@@ -94,6 +95,7 @@ const NavigationView : React.FC<IProps> = (props) => {
           What Should I Do?
         </Typography>
         <Box flexGrow={1} />
+        <LogoutButton/>
       </Toolbar>
     </AppBar>
   );

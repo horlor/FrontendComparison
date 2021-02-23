@@ -1,28 +1,54 @@
 import axios from "axios";
-import { LoginResult, RegisterModel } from "../models/Auth";
+import { LoginResult, RegisterModel, Session } from "../models/Auth";
 
 class AuthServiceClass{
 	private session?: LoginResult
-	private  logoutListener : ()=>void = ()=>{}
+	private  sessionListener : (session: Session)=>void = ()=>{}
 
 	public init(){
-		axios.defaults.headers.common["Authorization"] = "Bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNTQyNmI4OS1hMmFhLTQ4ODktYTFiNC1hODNlZGRmOGYyMmEiLCJqdGkiOiJiODJjMDRmYS1hOTZmLTRiZWQtYTU3NC1hZTZhZjllNGJmYzkiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxNDA4MjU4NSwiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ.VCFVJKM3bL2sGcjkLrhzu3KMyjz7S8nMDoiopduIvo4";
+		var local = localStorage.getItem("todo-session");
+		if(local)
+			this.session = JSON.parse(local)
+		
+		else{
+			let session = sessionStorage.getItem("todo-session")
+			if(session)
+				this.session = JSON.parse(session)
+		}
+		axios.defaults.headers.common["Authorization"] = "Bearer " + this.session?.token;
+		if(this.session)
+			this.sessionListener({loggedIn: true, userId:this.session.userId, username: this.session.username })
+		console.log(this.session)
 	}
 
-	public async login(username: string, password: string){
-		let result = (await axios.post<LoginResult>("/api/users/login",{username: username, password: password})).data;
-		this.session = result
-		axios.defaults.headers.common["Authorization"] = "Bearer " + result.token;
+	public async login(username: string, password: string, remember: boolean = false){
+		try{
+			let result = (await axios.post<LoginResult>("/api/users/login",{username: username, password: password})).data;
+			this.session = result
+			localStorage.removeItem("todo-session")
+			sessionStorage.removeItem("todo-session")
+			if(remember)
+				localStorage.setItem("todo-session",JSON.stringify(this.session));
+			sessionStorage.setItem("todo-session",JSON.stringify(this.session))
+			axios.defaults.headers.common["Authorization"] = "Bearer " + result.token;
+			this.sessionListener({loggedIn: true, userId:this.session.userId, username: this.session.username })
+			return true;
+		}
+		catch(ex){
+			return false;
+		}
 	}
 
-	public setLogoutListener(listener: ()=>void){
-		this.logoutListener = listener;
+	public setSessionListener(listener: (session: Session)=>void){
+		this.sessionListener = listener;
 	}
 
 	public logout(){
 		this.session = undefined;
 		axios.defaults.headers.common["Authorization"] = undefined;
-		this.logoutListener();
+		localStorage.removeItem("todo-session")
+		sessionStorage.removeItem("todo-session")
+		this.sessionListener({loggedIn: false});
 	}
 
 	

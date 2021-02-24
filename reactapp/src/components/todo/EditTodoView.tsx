@@ -6,6 +6,8 @@ import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTodoEdit } from "../../hooks/TodoHooks";
 import { Todo } from "../../models/Todo";
+import { MutationErrorProps } from "../../util/ErrorUtil";
+import ErrorDialog from "../common/ErrorDialog";
 
 const useStyles = makeStyles(theme => ({
 	root:{
@@ -92,6 +94,7 @@ const EditTodoView : React.FC<IProps> = props =>{
 			</Box>
 			</form>
 		</Dialog>
+		{mutation.isError && <ErrorDialog {...MutationErrorProps(mutation)}/>}
 		</>
 	);
 }

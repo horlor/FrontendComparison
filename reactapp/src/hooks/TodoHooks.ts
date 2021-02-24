@@ -9,7 +9,7 @@ import { Todo } from "../models/Todo"
 
 export const useTodoEdit = ()=>{
 	const queryClient = useQueryClient();
-	return useMutation(UpdateTodo, {
+	return useMutation<any,Error,Todo,unknown>(UpdateTodo, {
 		onSuccess:(data, variables, context)=>{
 			queryClient.invalidateQueries(["todos",variables.listId]);
 		}
@@ -18,7 +18,7 @@ export const useTodoEdit = ()=>{
 
 export const useTodoAdd = (list: number | null)=>{
 	const queryClient = useQueryClient();
-	return useMutation(AddTodo,{
+	return useMutation<Todo,Error,Todo,unknown>(AddTodo,{
 		onSuccess:(data, variables, context)=>{
 			queryClient.invalidateQueries(["todos",list]);
 		}
@@ -28,7 +28,7 @@ export const useTodoAdd = (list: number | null)=>{
 
 export const useTodoDelete = ()=>{
 	const queryClient = useQueryClient();
-	return useMutation(RemoveTodo,{
+	return useMutation<any,Error,Todo,unknown>(RemoveTodo,{
 		onSuccess:(data,variables,context)=>{
 			queryClient.invalidateQueries(["todos",variables.listId]);
 		}
@@ -37,12 +37,12 @@ export const useTodoDelete = ()=>{
 
 export const useTodo = ()=>{
 	const queryClient = useQueryClient();
-	const doneMutation = useMutation(SetTodoDone,{
+	const doneMutation = useMutation<any,Error,Todo,unknown>(SetTodoDone,{
 		onSuccess:(data,variables,context)=>{
 			queryClient.invalidateQueries(["todos",variables.listId]);
 		}
 	})
-	const importantMutation = useMutation(SwitchTodoImportant,{
+	const importantMutation = useMutation<any,Error,Todo,unknown>(SwitchTodoImportant,{
 		onSuccess:(data,variables,context)=>{
 			queryClient.invalidateQueries(["todos",variables.listId]);
 		}
@@ -66,7 +66,7 @@ export const useLists = ()=>{
 
 export const useListAdd = ()=>{
 	const queryClient = useQueryClient();
-	return useMutation(AddList, {
+	return useMutation<unknown,Error,List,unknown>(AddList, {
 		onSuccess:(data,variables,context)=>{
 			queryClient.invalidateQueries(["lists"]);
 		}

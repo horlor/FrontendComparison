@@ -3,6 +3,8 @@ import Paper from "@material-ui/core/Paper";
 import { Add } from "@material-ui/icons";
 import React, { useState } from "react";
 import { useTodoAdd } from "../../hooks/TodoHooks";
+import { MutationErrorProps } from "../../util/ErrorUtil";
+import ErrorDialog from "../common/ErrorDialog";
 
 const useStyles = makeStyles(theme => ({
 	root:{
@@ -48,6 +50,9 @@ const AddTodoView : React.FC<IProps> = props =>{
 					}}
 				/>
 			</Box>
+			{ mutation.isError && <ErrorDialog
+				{...MutationErrorProps(mutation)}
+			/>}
 		</Paper>
 	);
 }

@@ -2,6 +2,8 @@ import { Button, Dialog, DialogActions, DialogTitle } from "@material-ui/core";
 import React, { useState } from "react";
 import { useTodoDelete } from "../../hooks/TodoHooks";
 import { Todo } from "../../models/Todo";
+import { MutationErrorProps } from "../../util/ErrorUtil";
+import ErrorDialog from "../common/ErrorDialog";
 
 interface IProps{
 	opener : (open:()=>void)=>JSX.Element,
@@ -21,6 +23,7 @@ const DeleteTodoDialog : React.FC<IProps> = props =>{
 					<Button onClick={()=> setOpen(false)}>Cancel</Button>
 				</DialogActions>
 			</Dialog>
+			{mutation.isError && <ErrorDialog {...MutationErrorProps(mutation)}/>}
 		</>
 	);
 }

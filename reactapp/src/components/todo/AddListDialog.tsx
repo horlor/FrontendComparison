@@ -1,6 +1,9 @@
 import { Box, Button, Dialog, DialogTitle, makeStyles, TextField } from "@material-ui/core";
 import React, { useState } from "react"
 import { useListAdd } from "../../hooks/TodoHooks";
+import { MutationErrorProps } from "../../util/ErrorUtil";
+import ErrorDialog from "../common/ErrorDialog";
+import ErrorView from "../common/ErrorView";
 
 interface IProps{
 	opener: (open: ()=> void)=> JSX.Element
@@ -52,6 +55,7 @@ const AddListDialog : React.FC<IProps> = props =>{
 					</Box>
 				</form>
 			</Dialog>
+			{mutation.isError && <ErrorDialog  {...MutationErrorProps(mutation)}/>}
 		</>
 	);
 }

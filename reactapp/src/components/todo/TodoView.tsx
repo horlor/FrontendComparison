@@ -13,6 +13,8 @@ import { withStyles } from "@material-ui/core/styles";
 import dayjs from "dayjs";
 import DeleteTodoDialog from "./DeleteTodoDialog";
 import { useTodo } from "../../hooks/TodoHooks";
+import ErrorDialog from "../common/ErrorDialog";
+import { MutationErrorProps } from "../../util/ErrorUtil";
 
 const AccordionSummary = withStyles({
   root: {
@@ -76,6 +78,8 @@ const ShortTodoView : React.FC<{todo:Todo}> = (props)=>{
 				
 			</Box>
 		</Box>
+		{doneMutation.isError && <ErrorDialog {...MutationErrorProps(doneMutation)}/>}
+		{importantMutation.isError && <ErrorDialog {...MutationErrorProps(importantMutation)}/>}
 	</>
 	);
 }

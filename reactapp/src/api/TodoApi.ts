@@ -13,7 +13,7 @@ export async function UpdateTodo(todo: Todo){
 }
 
 export async function AddTodo(todo: Todo) {
-	return (await axios.post("/api/todos",todo))
+	return (await axios.post<Todo>("/api/todos",todo)).data
 }
 
 export async function RemoveTodo(todo: Todo){

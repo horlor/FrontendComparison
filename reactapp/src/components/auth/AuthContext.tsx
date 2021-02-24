@@ -19,7 +19,6 @@ export const AuthContext = createContext<AuthState>(defValues)
 const AuthProvider : React.FC = props =>{
 	const [state, setState] = useState<AuthState>(defValues)
 	const history = useHistory();
-	console.log(history)
 	useEffect(()=>{
 
 		AuthService.setSessionListener((session)=>{

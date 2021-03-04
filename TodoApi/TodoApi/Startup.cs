@@ -62,6 +62,16 @@ namespace TodoApi
                 .AddSignInManager<SignInManager<User>>()
                 .AddDefaultTokenProviders();
 
+
+            services.AddCors(builder =>
+                builder.AddPolicy("Default", policy =>
+                {
+                    policy.AllowAnyHeader().AllowCredentials().AllowAnyMethod().SetIsOriginAllowed(s =>
+                    {
+                        return true;
+                    });
+                }));
+
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -96,9 +106,10 @@ namespace TodoApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "TodoApi v1"));
             }
-            app.UseHttpsRedirection();
-
+            //app.UseHttpsRedirection();
+            app.UseCors("Default");
             app.UseRouting();
+            
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -12,6 +12,11 @@ namespace TodoApi.Models
         public string Name { get; set; }
     }
 
+    public class ListWithTodosDto : ListDto
+    {
+        public ICollection<TodoDto> Todos { get; set; }
+    }
+
     public static class ListMapExtensions
     {
         public static ListDto Map(this TodoList list)
@@ -22,5 +27,16 @@ namespace TodoApi.Models
                 Name = list.Name,
             };
         }
+
+        public static ListWithTodosDto MapWithTodos(this TodoList list)
+        {
+            return new ListWithTodosDto()
+            {
+                Id = list.Id,
+                Name = list.Name,
+                Todos = list.Items.Select(t => t.Map()).ToList()
+            };
+        }
     }
+
 }

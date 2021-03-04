@@ -1,31 +1,39 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
-    <a class="navbar-brand" href="">BlazorApp</a>
-    <button class="navbar-toggler" @onclick="ToggleNavMenu">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</div>
+﻿@inject ApiService service
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <ul class="nav flex-column">
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </li>
-    </ul>
-</div>
+<Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
+    <MenuItem Key="a" RouterLink="/counter">
+        <Icon Type="user" Theme="outline" />
+        <span class="nav-text">Counter</span>
+    </MenuItem>
+    <MenuItem Key="2">
+        <Icon Type="video-camera" Theme="outline" />
+        <span class="nav-text">General</span>
+    </MenuItem>
+    @if (lists == null)
+    {
+        <span>Loading...</span>
+    }
+    else
+    {
+        @foreach (var list in lists)
+        {
+            <MenuItem Key="@list.Id.ToString()" RouterLink="@list.Id.ToString()">
+                <span class="nav-text">@list.Name</span>
+            </MenuItem>
+        }
+    }
+
+</Menu>
 
 @code {
+    private ICollection<ListDto> lists;
+
+    protected async override Task OnInitializedAsync()
+    {
+        lists = await service.GetLists();
+        await base.OnInitializedAsync();
+    }
+
     private bool collapseNavMenu = true;
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;

@@ -39,10 +39,11 @@ namespace TodoApi.Controllers
         public async Task<IActionResult> GetList([FromRoute] long id)
         {
             var list = await dbcontext.TodoLists
+                .Include(l => l.Items)
                 .FirstOrDefaultAsync(l=> l.Id == id);
             if (list == null)
                 return NotFound();
-            return Ok(list.Map());
+            return Ok(list.MapWithTodos());
         }
 
         [HttpPost]

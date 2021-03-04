@@ -1,0 +1,24 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace BlazorApp.Models
+{
+    public class TodoDto
+    {
+        public long Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public bool Important { get; set; }
+        public bool Done { get; set; }
+        public DateTimeOffset? DeadLine { get; set; }
+        public string OwnerId { get; set; }
+        public long? ListId { get; set; }
+    }
+
+    public class ListWithTodos : ListDto
+    {
+        public ICollection<TodoDto> Todos { get; set; }
+    }
+}

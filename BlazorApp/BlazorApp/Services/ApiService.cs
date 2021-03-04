@@ -1,0 +1,39 @@
+﻿using BlazorApp.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
+
+namespace BlazorApp.Services
+{
+    public class ApiService
+    {
+        private HttpClient httpClient = new HttpClient();
+
+        public ApiService()
+        {
+            httpClient.BaseAddress = new Uri( "http://localhost:5000/");
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNTQyNmI4OS1hMmFhLTQ4ODktYTFiNC1hODNlZGRmOGYyMmEiLCJqdGkiOiJkYjg1MjZkNC03Y2IxLTQxZDctODU0ZC04OTkzODVmYjgxZTMiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxNTgzNDYxNiwiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ._XWktCmpbOTHcvEvNyA9KDkruMi6glaCadW859wDNII");
+        }
+
+        public async Task<ICollection<ListDto>> GetLists()
+        {
+            return await httpClient.GetFromJsonAsync<ICollection<ListDto>>("/api/lists");
+        }
+
+        public async Task<ListWithTodos> GetListWithTodosAsync(long id)
+        {
+            var listTask = httpClient.GetFromJsonAsync<ListDto>($"/api/lists/{id}");
+            var todosTask = httpClient.GetFromJsonAsync < ICollection<TodoDto>>($"/api/todos?listId={id}");
+            await Task.WhenAll(new Task[]{ listTask, todosTask});
+            return new ListWithTodos
+            {
+                Id = listTask.Result.Id,
+                Name = listTask.Result.Name,
+                Todos = todosTask.Result,
+            };
+        }
+    }
+}

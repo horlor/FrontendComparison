@@ -1,0 +1,73 @@
+﻿@page "/{ListId:long}"
+@inject ApiService service
+
+@if(List == null)
+{
+    <h3>Loading...</h3>
+}
+else
+{
+    <h3>@List.Name</h3>
+    @foreach(var todo in List.Todos)
+    {
+        <Card Size="small" BodyStyle="display: flex; flex-direction: row;">
+                <Button>
+                    <Icon Type="check" Theme="outline" />
+                </Button>
+                <div class="todo-body">
+                    <div class="todo-row">
+                        <Icon Type="star" Theme="outline" />
+                        <span>@todo.Title</span>
+                    </div>
+                    <div class="todo-row">
+                        <Icon Type="calendar" Theme="outline" />
+                        <span><Text>@todo.DeadLine?.ToString("yyyy.MM.dd.")</Text></span>
+                    </div>
+                    
+                </div>
+        </Card>
+    }
+}
+
+<style>
+    .todo-card{
+        display : flex;
+        flex-direction: row;
+    }
+
+    .todo-body{
+
+    }
+
+    .todo-title{
+        font-size : medium
+    }
+
+    .todo-row{
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+    }
+
+
+</style>
+
+@code {
+    [Parameter]
+    public long ListId { get; set; }
+
+    public ListWithTodos List { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+    protected async override  Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        List = await service.GetListWithTodosAsync(ListId);
+    }
+
+
+}

@@ -10,8 +10,10 @@ import DayJsUtils from "@date-io/dayjs"
 import LoginPage from './components/pages/LoginPage';
 import AuthProvider from './components/auth/AuthContext';
 import RegisterPage from './components/pages/RegisterPage';
+import axios from 'axios';
 
 const queryClient = new QueryClient()
+axios.defaults.baseURL="http://localhost:5000"
 
 function App() {
   return (

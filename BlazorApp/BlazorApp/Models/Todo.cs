@@ -12,7 +12,7 @@ namespace BlazorApp.Models
         public string Description { get; set; }
         public bool Important { get; set; }
         public bool Done { get; set; }
-        public DateTimeOffset? DeadLine { get; set; }
+        public DateTime? DeadLine { get; set; }
         public string OwnerId { get; set; }
         public long? ListId { get; set; }
 

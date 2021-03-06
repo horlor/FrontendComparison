@@ -61,5 +61,10 @@ namespace BlazorApp.Services
         {
             return await httpClient.PostWithJsonAsync<TodoDto, TodoDto>($"/api/todos", todo);
         }
+
+        public async Task DeleteTodo(TodoDto todo)
+        {
+            await httpClient.DeleteAsync($"/api/todos/{todo.Id}");
+        }
     }
 }

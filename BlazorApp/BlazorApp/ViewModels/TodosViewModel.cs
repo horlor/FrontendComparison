@@ -20,6 +20,8 @@ namespace BlazorApp.ViewModels
 
         public TodoDto Selected { get; set; }
 
+        private TodoDto _selectedRef;
+
         public string NewTodo { get; set; }
 
 
@@ -43,7 +45,8 @@ namespace BlazorApp.ViewModels
 
         public void ChangeSelected(TodoDto todo)
         {
-            Selected = todo;
+            Selected = todo?.Clone();
+            _selectedRef = todo;
         }
 
         public async Task AddTodo()
@@ -58,6 +61,22 @@ namespace BlazorApp.ViewModels
             NewTodo = "";
         }
 
+        public async Task UpdateTodo()
+        {
+            var ret = await service.UpdateTodo(Selected);
+            _selectedRef.Title = ret.Title;
+            _selectedRef.DeadLine = ret.DeadLine;
+            _selectedRef.Description = ret.Description;
 
+        }
+
+        public async Task DeleteTodo()
+        {
+            await service.DeleteTodo(Selected);
+            _ = List.Todos.Remove(_selectedRef);
+            Selected = null;
+            _selectedRef = null;
+
+        }
     }
 }

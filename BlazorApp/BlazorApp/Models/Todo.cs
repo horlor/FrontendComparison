@@ -15,10 +15,21 @@ namespace BlazorApp.Models
         public DateTimeOffset? DeadLine { get; set; }
         public string OwnerId { get; set; }
         public long? ListId { get; set; }
+
+        public TodoDto Clone()
+        {
+            return new TodoDto()
+            {
+                Id = this.Id,
+                Title = Title,
+                DeadLine = DeadLine,
+                Description = Description,
+                Important = Important,
+                Done = Done,
+                OwnerId = OwnerId,
+                ListId = ListId,
+            };
+        }
     }
 
-    public class ListWithTodos : ListDto
-    {
-        public ICollection<TodoDto> Todos { get; set; }
-    }
 }

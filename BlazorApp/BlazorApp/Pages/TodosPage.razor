@@ -1,23 +1,26 @@
 ﻿@page "/{ListId:long}"
-@inject ApiService service
+@inject TodosViewModel vm
 
-@if(List == null)
+@if (vm.List == null)
 {
     <h3>Loading...</h3>
 }
 else
 {
-    <h3>@List.Name</h3>
-    @foreach(var todo in List.Todos)
+    <h3>@vm.List.Name</h3>
+    <Card Size="small" BodyStyle="display: flex; flex-direction: row; align-items: center;">
+        <Button Icon="plus">
+        </Button>
+        <Input placeholder="What should I do? (press Enter)" @bind-Value="NewTodo"/>
+    </Card>
+    @foreach (var todo in vm.List.Todos)
     {
-        <Card Size="small" BodyStyle="display: flex; flex-direction: row;">
-                <Button>
-                    <Icon Type="check" Theme="outline" />
-                </Button>
+        <Card Size="small" BodyStyle="display: flex; flex-direction: row; align-items: center;">
+                <Button @onclick="@(() => vm.ChangeDone(todo))" Icon="@(todo.Done?"check":" ")" />
                 <div class="todo-body">
                     <div class="todo-row">
-                        <Icon Type="star" Theme="outline" />
-                        <span>@todo.Title</span>
+                        <Icon Type="star" Theme="outline" Style="font-size:1.5em;" @onclick="@(() => vm.ChangeImportant(todo))"/>
+                        <span Style="font-size:1.5em;" @onclick="@(()=>vm.ChangeSelected(todo))">@todo.Title</span>
                     </div>
                     <div class="todo-row">
                         <Icon Type="calendar" Theme="outline" />
@@ -27,16 +30,20 @@ else
                 </div>
         </Card>
     }
+    @if (vm.Selected != null)
+    {
+    <Drawer Visible="@(vm.Selected != null)" Closable="true" OnClose="@(() => vm.ChangeSelected(null))">
+        <h4>@vm.Selected.Title</h4>
+        <div>@vm.Selected.Description</div>
+    </Drawer>
+    }
 }
 
 <style>
-    .todo-card{
-        display : flex;
-        flex-direction: row;
-    }
-
-    .todo-body{
-
+    .todo-body {
+        display: flex;
+        flex-direction: column;
+        padding: 0px 0px 0px 8px;
     }
 
     .todo-title{
@@ -46,7 +53,7 @@ else
     .todo-row{
         display: flex;
         flex-direction: row;
-        align-content: center;
+        align-items: center;
     }
 
 
@@ -56,18 +63,19 @@ else
     [Parameter]
     public long ListId { get; set; }
 
-    public ListWithTodos List { get; set; }
+    public string NewTodo { get; set; }
+
 
     protected async override Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
     }
 
-    protected async override  Task OnParametersSetAsync()
+    protected async override Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
-        List = await service.GetListWithTodosAsync(ListId);
-    }
+        await vm.Load(ListId);
 
+    }
 
 }

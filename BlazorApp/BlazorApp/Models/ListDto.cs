@@ -11,4 +11,10 @@ namespace BlazorApp.Models
         public string Name { get; set; }
     }
 
+
+    public class ListWithTodos : ListDto
+    {
+        public ICollection<TodoDto> Todos { get; set; }
+    }
+
 }

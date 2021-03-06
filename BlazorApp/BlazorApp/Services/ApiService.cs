@@ -35,5 +35,31 @@ namespace BlazorApp.Services
                 Todos = todosTask.Result,
             };
         }
+
+        public async Task<TodoDto> ChangeTodoDone(TodoDto todoDto)
+        {
+            var todo = todoDto.Clone();
+            todo.Done = !todo.Done;
+            var ret =  await httpClient.PutWithJsonAsync<TodoDto, TodoDto>($"/api/todos/{todo.Id}", todo);
+            return ret;
+        }
+
+        public async Task<TodoDto> ChangeTodoImportant(TodoDto todoDto)
+        {
+            var todo = todoDto.Clone();
+            todo.Important = !todo.Important;
+            return await httpClient.PutWithJsonAsync<TodoDto,TodoDto>($"/api/todos/{todo.Id}", todo);
+            
+        }
+
+        public async Task<TodoDto> UpdateTodo(TodoDto tododto)
+        {
+            return await httpClient.PutWithJsonAsync<TodoDto, TodoDto>($"/api/todos/{tododto.Id}", tododto);
+        }
+
+        public async Task<TodoDto> CreateTodo(TodoDto todo)
+        {
+            return await httpClient.PostWithJsonAsync<TodoDto, TodoDto>($"/api/todos", todo);
+        }
     }
 }

@@ -11,7 +11,7 @@ else
     <Card Size="small" BodyStyle="display: flex; flex-direction: row; align-items: center;">
         <Button Icon="plus">
         </Button>
-        <Input placeholder="What should I do? (press Enter)" @bind-Value="NewTodo"/>
+        <Input placeholder="What should I do? (press Enter)" @bind-Value="vm.NewTodo" @onkeydown="onKeyPressed"/>
     </Card>
     @foreach (var todo in vm.List.Todos)
     {
@@ -76,6 +76,14 @@ else
         await base.OnParametersSetAsync();
         await vm.Load(ListId);
 
+    }
+
+    public async Task onKeyPressed(KeyboardEventArgs e)
+    {
+        if(e.Key == "Enter")
+        {
+            await vm.AddTodo();
+        }
     }
 
 }

@@ -14,7 +14,7 @@ namespace BlazorApp.Models
 
     public class ListWithTodos : ListDto
     {
-        public ICollection<TodoDto> Todos { get; set; }
+        public IList<TodoDto> Todos { get; set; }
     }
 
 }

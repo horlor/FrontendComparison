@@ -10,7 +10,7 @@ namespace BlazorApp.Services
 {
     public class ApiService
     {
-        private HttpClient httpClient = new HttpClient();
+        private readonly HttpClient httpClient = new HttpClient();
 
         public ApiService()
         {
@@ -26,7 +26,7 @@ namespace BlazorApp.Services
         public async Task<ListWithTodos> GetListWithTodosAsync(long id)
         {
             var listTask = httpClient.GetFromJsonAsync<ListDto>($"/api/lists/{id}");
-            var todosTask = httpClient.GetFromJsonAsync < ICollection<TodoDto>>($"/api/todos?listId={id}");
+            var todosTask = httpClient.GetFromJsonAsync < IList<TodoDto>>($"/api/todos?listId={id}");
             await Task.WhenAll(new Task[]{ listTask, todosTask});
             return new ListWithTodos
             {

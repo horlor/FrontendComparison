@@ -20,6 +20,8 @@ namespace BlazorApp.ViewModels
 
         public TodoDto Selected { get; set; }
 
+        public string NewTodo { get; set; }
+
 
         public async Task Load(long ListId)
         {
@@ -42,6 +44,18 @@ namespace BlazorApp.ViewModels
         public void ChangeSelected(TodoDto todo)
         {
             Selected = todo;
+        }
+
+        public async Task AddTodo()
+        {
+            var ret = await service.CreateTodo(new TodoDto()
+            {
+                Id = 0,
+                Title = NewTodo,
+                ListId = List.Id,
+            });
+            List.Todos.Insert(0,ret);
+            NewTodo = "";
         }
 
 

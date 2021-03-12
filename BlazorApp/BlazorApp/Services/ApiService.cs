@@ -15,24 +15,75 @@ namespace BlazorApp.Services
         public ApiService()
         {
             httpClient.BaseAddress = new Uri( "http://localhost:5000/");
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiNTQyNmI4OS1hMmFhLTQ4ODktYTFiNC1hODNlZGRmOGYyMmEiLCJqdGkiOiJkYjg1MjZkNC03Y2IxLTQxZDctODU0ZC04OTkzODVmYjgxZTMiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxNTgzNDYxNiwiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ._XWktCmpbOTHcvEvNyA9KDkruMi6glaCadW859wDNII");
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTE0NzY3OS0wMjFlLTRiOGMtYjJmZi1kNTVhY2YxYTBmMmMiLCJqdGkiOiJlNmU3Yzc5Mi03Y2JkLTRhM2ItYjA0Ni1iYjY4YzRmNGJhOWUiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxNjgzODk5NSwiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ.arl6MQqt1uYQtwMlEitcywMS4IUY1aunoXrffRY9T80");
         }
 
         public async Task<ICollection<ListDto>> GetLists()
         {
-            return await httpClient.GetFromJsonAsync<ICollection<ListDto>>("/api/lists");
+            var list = await httpClient.GetFromJsonAsync<IList<ListDto>>("/api/lists");
+            var ret = new List<ListDto>();
+            ret.Add(new ListDto()
+            {
+                Id = "general",
+                Name = "General"
+            });
+            ret.Add(new ListDto()
+            {
+                Id = "important",
+                Name = "Important",
+            });
+            ret.Add(new ListDto()
+            {
+                Id = "urgent",
+                Name = "Urgent",
+            });
+            ret.AddRange(list);
+            return ret;
         }
 
-        public async Task<ListWithTodos> GetListWithTodosAsync(long id)
+        public async Task<ListWithTodos> GetListWithTodosAsync(string id)
         {
-            var listTask = httpClient.GetFromJsonAsync<ListDto>($"/api/lists/{id}");
-            var todosTask = httpClient.GetFromJsonAsync < IList<TodoDto>>($"/api/todos?listId={id}");
-            await Task.WhenAll(new Task[]{ listTask, todosTask});
+            Task<IList<TodoDto>> todos;
+            Task<ListDto> list;
+            if(id == "general")
+            {
+                list = Task.FromResult(new ListDto
+                {
+                    Id = "general",
+                    Name = "General",
+                });
+                todos = httpClient.GetFromJsonAsync<IList<TodoDto>>($"/api/todos");
+            }
+            else if(id == "important")
+            {
+                list = Task.FromResult(new ListDto
+                {
+                    Id = "important",
+                    Name = "Important",
+                });
+                todos = httpClient.GetFromJsonAsync<IList<TodoDto>>($"/api/todos?all=true&important=true");
+            }
+            else if(id == "urgent")
+            {
+                list = Task.FromResult(new ListDto
+                {
+                    Id = "urgent",
+                    Name = "Urgent",
+                });
+                todos = httpClient.GetFromJsonAsync<IList<TodoDto>>($"/api/todos?all=true&urgent=true");
+            }
+            else
+            {
+                list = httpClient.GetFromJsonAsync<ListDto>($"/api/lists/{id}");
+                todos = httpClient.GetFromJsonAsync<IList<TodoDto>>($"/api/todos?listId={id}");
+            }
+
+            await Task.WhenAll(new Task[]{ list, todos});
             return new ListWithTodos
             {
-                Id = listTask.Result.Id,
-                Name = listTask.Result.Name,
-                Todos = todosTask.Result,
+                Id = list.Result.Id,
+                Name = list.Result.Name,
+                Todos = todos.Result,
             };
         }
 

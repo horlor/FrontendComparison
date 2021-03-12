@@ -36,7 +36,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetList([FromRoute] long id)
+        public async Task<IActionResult> GetList([FromRoute] string id)
         {
             var list = await dbcontext.TodoLists
                 .Include(l => l.Items)
@@ -49,7 +49,7 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddList([FromBody] TodoList list)
         {
-            list.Id = 0;
+            list.Id = null;
             list.OwnerId = UserId;
             var ret = dbcontext.TodoLists.Add(list);
             await dbcontext.SaveChangesAsync();
@@ -57,7 +57,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateList([FromRoute] long id, [FromBody] TodoList list)
+        public async Task<IActionResult> UpdateList([FromRoute] string id, [FromBody] TodoList list)
         {
             var db = await dbcontext.TodoLists
                 .FirstOrDefaultAsync(l => l.Id == id);
@@ -72,7 +72,7 @@ namespace TodoApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteList([FromRoute] long id)
+        public async Task<IActionResult> DeleteList([FromRoute] string id)
         {
             var db = await dbcontext.TodoLists
                 .FirstOrDefaultAsync(l => l.Id == id);

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TodoApi.Migrations
 {
-    public partial class initial : Migration
+    public partial class recreateWithStringIds : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -156,8 +156,7 @@ namespace TodoApi.Migrations
                 name: "TodoLists",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     OwnerId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -176,15 +175,14 @@ namespace TodoApi.Migrations
                 name: "TodoItems",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Important = table.Column<bool>(type: "bit", nullable: false),
                     Done = table.Column<bool>(type: "bit", nullable: false),
                     DeadLine = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     OwnerId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ListId = table.Column<long>(type: "bigint", nullable: false)
+                    ListId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -1,14 +1,6 @@
 ﻿@inject ApiService service
 
-<Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline" DefaultSelectedKeys=@(new[]{"4"})>
-    <MenuItem Key="a" RouterLink="/counter">
-        <Icon Type="user" Theme="outline" />
-        <span class="nav-text">Counter</span>
-    </MenuItem>
-    <MenuItem Key="2">
-        <Icon Type="video-camera" Theme="outline" />
-        <span class="nav-text">General</span>
-    </MenuItem>
+<Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
     @if (lists == null)
     {
         <span>Loading...</span>
@@ -17,7 +9,8 @@
     {
         @foreach (var list in lists)
         {
-            <MenuItem Key="@list.Id.ToString()" RouterLink="@list.Id.ToString()">
+            <MenuItem Key="@list.Id.ToString()" RouterLink="@list.Id.ToString()" >
+                <Icon Type=@(list.Id == "important"?"star":list.Id=="urgent"?"calendar":list.Id=="general"?"block":"unordered-list") Theme="outline" />
                 <span class="nav-text">@list.Name</span>
             </MenuItem>
         }

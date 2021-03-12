@@ -16,7 +16,7 @@ export const useTodoEdit = ()=>{
 	})
 }
 
-export const useTodoAdd = (list: number | null)=>{
+export const useTodoAdd = (list: string | null)=>{
 	const queryClient = useQueryClient();
 	return useMutation<Todo,Error,Todo,unknown>(AddTodo,{
 		onSuccess:(data, variables, context)=>{
@@ -53,8 +53,8 @@ export const useTodo = ()=>{
 export const useTodos = ()=>{
 	const queryClient = useQueryClient();
 	const {id} = useParams<{id:string|undefined}>();
-	const listId = id?parseInt(id):null
-	const listResult = useQuery<List,AppError>(["lists",listId],()=>listId?GetList(listId):{id:0,name:"General",builtIn:true});
+	const listId = id?id:null;
+	const listResult = useQuery<List,AppError>(["lists",listId],()=>listId?GetList(listId):{id:null,name:"General",builtIn:true});
 	const todoResult = useQuery<Todo[],AppError>(["todos",listId],()=>GetTodos(listId))
 	return {list: listResult, todos: todoResult};
 }

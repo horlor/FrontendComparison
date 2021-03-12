@@ -3,7 +3,7 @@ import { AppError } from "../models/Error";
 import { Todo } from "../models/Todo";
 
 
-export async function GetTodos(listId:number | null){
+export async function GetTodos(listId:string | null){
 	let url = listId?`/api/todos/?listId=${listId}`:"/api/todos/"
 	return (await axios.get<Todo[]>(url)).data;
 }
@@ -30,7 +30,7 @@ export async function SwitchTodoImportant(todo: Todo){
 	await UpdateTodo(todo);
 }
 
-export async function DeleteTodos(important?: boolean, done?:boolean, urgent?: boolean, listId?: number){
+export async function DeleteTodos(important?: boolean, done?:boolean, urgent?: boolean, listId?: string){
 	var query = new URLSearchParams();
 	if(listId)
 		query.append("listId",listId.toString())

@@ -10,8 +10,8 @@ using TodoApi.Data;
 namespace TodoApi.Migrations
 {
     [DbContext(typeof(TodoContext))]
-    [Migration("20210206181717_optionalListID")]
-    partial class optionalListID
+    [Migration("20210312092122_recreateWithStringIds")]
+    partial class recreateWithStringIds
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -152,12 +152,11 @@ namespace TodoApi.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.TodoItem", b =>
+            modelBuilder.Entity("TodoApi.Data.TodoItem", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .UseIdentityColumn();
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTimeOffset?>("DeadLine")
                         .HasColumnType("datetimeoffset");
@@ -171,8 +170,8 @@ namespace TodoApi.Migrations
                     b.Property<bool>("Important")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("ListId")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ListId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("OwnerId")
                         .HasColumnType("nvarchar(450)");
@@ -189,12 +188,11 @@ namespace TodoApi.Migrations
                     b.ToTable("TodoItems");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.TodoList", b =>
+            modelBuilder.Entity("TodoApi.Data.TodoList", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .UseIdentityColumn();
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -209,7 +207,7 @@ namespace TodoApi.Migrations
                     b.ToTable("TodoLists");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.User", b =>
+            modelBuilder.Entity("TodoApi.Data.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -285,7 +283,7 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("TodoApi.Models.User", null)
+                    b.HasOne("TodoApi.Data.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -294,7 +292,7 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("TodoApi.Models.User", null)
+                    b.HasOne("TodoApi.Data.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -309,7 +307,7 @@ namespace TodoApi.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TodoApi.Models.User", null)
+                    b.HasOne("TodoApi.Data.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -318,21 +316,21 @@ namespace TodoApi.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("TodoApi.Models.User", null)
+                    b.HasOne("TodoApi.Data.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TodoApi.Models.TodoItem", b =>
+            modelBuilder.Entity("TodoApi.Data.TodoItem", b =>
                 {
-                    b.HasOne("TodoApi.Models.TodoList", "List")
+                    b.HasOne("TodoApi.Data.TodoList", "List")
                         .WithMany("Items")
                         .HasForeignKey("ListId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("TodoApi.Models.User", "Owner")
+                    b.HasOne("TodoApi.Data.User", "Owner")
                         .WithMany("Todos")
                         .HasForeignKey("OwnerId");
 
@@ -341,21 +339,21 @@ namespace TodoApi.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.TodoList", b =>
+            modelBuilder.Entity("TodoApi.Data.TodoList", b =>
                 {
-                    b.HasOne("TodoApi.Models.User", "Owner")
+                    b.HasOne("TodoApi.Data.User", "Owner")
                         .WithMany("Lists")
                         .HasForeignKey("OwnerId");
 
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.TodoList", b =>
+            modelBuilder.Entity("TodoApi.Data.TodoList", b =>
                 {
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("TodoApi.Models.User", b =>
+            modelBuilder.Entity("TodoApi.Data.User", b =>
                 {
                     b.Navigation("Lists");
 

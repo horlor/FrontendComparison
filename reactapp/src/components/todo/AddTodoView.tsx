@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 interface IProps{
-	listId: number | null
+	listId: string | null
 }
 
 
@@ -27,7 +27,7 @@ const AddTodoView : React.FC<IProps> = props =>{
 	const [title, setTitle] = useState("")
 
 	function submit(){
-		mutation.mutate({title:title, id:0, deadLine:null, important:false, done:false, listId: props.listId, ownerId:""})
+		mutation.mutate({title:title, id:null, deadLine:null, important:false, done:false, listId: props.listId, ownerId:""})
 		setTitle("")
 	}
 	return ( 

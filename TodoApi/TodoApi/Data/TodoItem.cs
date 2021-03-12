@@ -7,7 +7,7 @@ namespace TodoApi.Data
 {
     public class TodoItem
     {
-        public long Id { get; set; }
+        public string Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
         public bool Important { get; set; }
@@ -15,7 +15,7 @@ namespace TodoApi.Data
         public DateTimeOffset? DeadLine { get; set; }
         public string OwnerId { get; set; }
         public virtual User Owner { get; set; }
-        public long? ListId { get; set; }
+        public string ListId { get; set; }
         public virtual TodoList List { get; set; }
     }
 }

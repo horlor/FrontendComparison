@@ -24,7 +24,7 @@ namespace TodoApi.Controllers
         }
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetMyTodos([FromQuery] bool important = false, [FromQuery] bool urgent=false, [FromQuery] bool all = false, [FromQuery] long? listId = null)
+        public async Task<IActionResult> GetMyTodos([FromQuery] bool important = false, [FromQuery] bool urgent=false, [FromQuery] bool all = false, [FromQuery] string listId = null)
         {
             var query = dbContext.TodoItems
                 .Where(t => t.OwnerId == UserId);
@@ -33,7 +33,11 @@ namespace TodoApi.Controllers
             if (important)
                 query = query.Where(t => t.Important);
             if (urgent)
-                query = query.Where(t => t.DeadLine < DateTime.Now + new TimeSpan(7, 0, 0, 0));
+            {
+                var urgentdate = DateTimeOffset.Now + new TimeSpan(7, 0, 0, 0);
+                query = query.Where(t => t.DeadLine != null && t.DeadLine.Value <urgentdate );
+            }
+                 
             var todos = await query.Select(t=>t.Map()).ToListAsync();
             todos.Reverse();
             return Ok(todos);
@@ -61,7 +65,7 @@ namespace TodoApi.Controllers
                 return Conflict();
             var db = new TodoItem()
             {
-                Id = 0,
+                Id = null,
                 DeadLine = todo.DeadLine,
                 Done = todo.Done,
                 Description = todo.Description,
@@ -77,7 +81,7 @@ namespace TodoApi.Controllers
         }
         [Authorize]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTodo([FromRoute] long id, [FromBody] TodoDto item)
+        public async Task<IActionResult> UpdateTodo([FromRoute] string id, [FromBody] TodoDto item)
         {
             var db = await dbContext.TodoItems
                 .Include(t => t.Owner)
@@ -104,7 +108,7 @@ namespace TodoApi.Controllers
 
         [Authorize]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodo([FromRoute] long id)
+        public async Task<IActionResult> DeleteTodo([FromRoute] string id)
         {
             var db = await dbContext.TodoItems
                 .FirstOrDefaultAsync(i => i.Id == id);
@@ -119,7 +123,7 @@ namespace TodoApi.Controllers
 
         [Authorize]
         [HttpDelete]
-        public async Task<ActionResult> DeleteTodos([FromQuery] bool important = false, [FromQuery] bool urgent = false, [FromQuery] bool all = false, [FromQuery] long? listId = null, [FromQuery] bool onlyDone = false)
+        public async Task<ActionResult> DeleteTodos([FromQuery] bool important = false, [FromQuery] bool urgent = false, [FromQuery] bool all = false, [FromQuery] string listId = null, [FromQuery] bool onlyDone = false)
         {
             var query = dbContext.TodoItems
                 .Where(t => t.OwnerId == UserId);
@@ -131,7 +135,7 @@ namespace TodoApi.Controllers
                 query = query.Where(t => t.DeadLine < DateTime.Now + new TimeSpan(7, 0, 0, 0));
             dbContext.RemoveRange(query);
             await dbContext.SaveChangesAsync();
-            return NoContent();
+            return NoContent(); 
         }
 
     }

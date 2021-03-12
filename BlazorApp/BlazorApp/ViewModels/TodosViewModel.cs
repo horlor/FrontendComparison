@@ -25,7 +25,7 @@ namespace BlazorApp.ViewModels
         public string NewTodo { get; set; }
 
 
-        public async Task Load(long ListId)
+        public async Task Load(string ListId)
         {
             List = await service.GetListWithTodosAsync(ListId);
             Selected = null;
@@ -51,9 +51,10 @@ namespace BlazorApp.ViewModels
 
         public async Task AddTodo()
         {
+            Console.WriteLine(NewTodo);
             var ret = await service.CreateTodo(new TodoDto()
             {
-                Id = 0,
+                Id = null,
                 Title = NewTodo,
                 ListId = List.Id,
             });

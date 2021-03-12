@@ -1,4 +1,4 @@
-﻿@page "/{ListId:long}"
+﻿@page "/{ListId}"
 @inject TodosViewModel vm
 @inject ModalService modalService 
 
@@ -24,7 +24,7 @@ else
             <Button @onclick="@(() => vm.ChangeDone(todo))" Icon="@(todo.Done?"check":" ")" />
             <div class="todo-body" @onclick="(()=> vm.ChangeSelected(todo))">
                 <div class="todo-row">
-                    <Icon Type="star" Theme="outline" Style="font-size:1.5em;" @onclick="@(() => vm.ChangeImportant(todo))" />
+                    <Icon Type="star" Theme="outline" Style=@($"font-size:1.5em; {(todo.Important?"color: gold":" ")}") @onclick="@(() => vm.ChangeImportant(todo))" />
                     <span Style="font-size:1.5em;" @onclick="@(()=>vm.ChangeSelected(todo))">@todo.Title</span>
                 </div>
                 <div class="todo-row">
@@ -90,7 +90,7 @@ else
 
 @code {
     [Parameter]
-    public long ListId { get; set; }
+    public string ListId { get; set; }
 
     public string NewTodo { get; set; }
 

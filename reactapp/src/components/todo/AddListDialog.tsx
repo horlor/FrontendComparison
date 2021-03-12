@@ -33,7 +33,7 @@ const AddListDialog : React.FC<IProps> = props =>{
 		setOpen(false)
 	}
 	function submit(){
-		mutation.mutate({id:0, name:title});
+		mutation.mutate({id:null , name:title});
 		setOpen(false)
 	}
 	return(

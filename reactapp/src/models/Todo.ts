@@ -1,10 +1,10 @@
 export interface Todo{
-	id: number,
+	id: string | null,
 	title: string,
 	description?: string,
 	important: boolean,
 	done: boolean,
 	deadLine: string | null,
 	ownerId: string | null,
-	listId: number | null,
+	listId: string | null,
 }

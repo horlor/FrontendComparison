@@ -1,5 +1,5 @@
 export interface List{
 	name: string,
-	id: number,
+	id: string | null,
 	builtIn?: boolean
 }

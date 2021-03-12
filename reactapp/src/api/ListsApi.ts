@@ -5,7 +5,7 @@ export async function GetLists(){
 	return (await axios.get("/api/lists")).data;
 }
 
-export async function GetList(listId: number){
+export async function GetList(listId: string){
 	return (await axios.get(`/api/lists/${listId}`)).data;
 }
 

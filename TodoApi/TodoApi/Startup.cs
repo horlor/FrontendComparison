@@ -45,6 +45,7 @@ namespace TodoApi
             services.AddDbContext<TodoContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Default"));
+                options.EnableDetailedErrors();
             });
 
             services.AddIdentityCore<User>(options =>

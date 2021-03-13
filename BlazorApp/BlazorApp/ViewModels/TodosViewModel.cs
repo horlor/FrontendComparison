@@ -68,6 +68,7 @@ namespace BlazorApp.ViewModels
             _selectedRef.Title = ret.Title;
             _selectedRef.DeadLine = ret.DeadLine;
             _selectedRef.Description = ret.Description;
+            Selected = null;
 
         }
 
@@ -78,6 +79,12 @@ namespace BlazorApp.ViewModels
             Selected = null;
             _selectedRef = null;
 
+        }
+
+        public async Task StarSelected()
+        {
+            await service.ChangeTodoImportant(Selected);
+            _selectedRef.Important = !_selectedRef.Important;
         }
     }
 }

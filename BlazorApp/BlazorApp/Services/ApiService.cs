@@ -87,6 +87,12 @@ namespace BlazorApp.Services
             };
         }
 
+        public async Task<ListDto> AddList(ListDto list)
+        {
+            var ret = await httpClient.PostWithJsonAsync<ListDto, ListDto>($"/api/lists", list);
+            return ret;
+        }
+
         public async Task<TodoDto> ChangeTodoDone(TodoDto todoDto)
         {
             var todo = todoDto.Clone();

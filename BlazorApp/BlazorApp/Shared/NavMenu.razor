@@ -14,9 +14,20 @@
                 <span class="nav-text">@list.Name</span>
             </MenuItem>
         }
+        <MenuItem Key="add" OnClick="()=>openAddDialog=true">
+            <Icon Type="plus" Theme="outline" />
+            <span class="nav-text">Add list</span>
+        </MenuItem>
     }
-
 </Menu>
+<Modal
+    Title="Adding new list"
+    Visible="@openAddDialog"
+    OnOk="handleOk"
+    OnCancel="handleCancel"
+    >
+    <Input @bind-Value="newTitle" Class="inputField" />
+</Modal>
 
 @code {
     private ICollection<ListDto> lists;
@@ -28,6 +39,26 @@
     }
 
     private bool collapseNavMenu = true;
+
+    private bool openAddDialog = false;
+
+    private string newTitle;
+
+    private async Task handleOk()
+    {
+        var ret = await service.AddList(new ListDto()
+        {
+            Name = newTitle
+        });
+        openAddDialog = false;
+        newTitle = null;
+        lists.Add(ret);
+    }
+
+    private void handleCancel()
+    {
+        openAddDialog = false;
+    }
 
     private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 

@@ -1,6 +1,8 @@
-import axios, { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { AppError } from "../models/Error";
+import { List, ListWithTodos } from "../models/List";
 import { Todo } from "../models/Todo";
+import { GetList } from "./ListsApi";
 
 
 export async function GetTodos(listId:string | null){
@@ -13,6 +15,8 @@ export async function UpdateTodo(todo: Todo){
 }
 
 export async function AddTodo(todo: Todo) {
+	if(todo.listId == "general" || todo.listId == "urgent" || todo.listId == "urgent")
+		todo.listId = null;
 	return (await axios.post<Todo>("/api/todos",todo)).data
 }
 
@@ -30,17 +34,64 @@ export async function SwitchTodoImportant(todo: Todo){
 	await UpdateTodo(todo);
 }
 
-export async function DeleteTodos(important?: boolean, done?:boolean, urgent?: boolean, listId?: string){
+export async function DeleteTodos(param: { done?:boolean, listId: string | null}){
 	var query = new URLSearchParams();
-	if(listId)
-		query.append("listId",listId.toString())
-	else
-		query.append("all",true.toString());
-	if(important)
-		query.append("important",important.toString())
-	if(done)
-		query.append("done",done.toString())
-	if(urgent)
-		query.append("urgent",urgent.toString())
+	console.log(param)
+	if(param.listId){
+		switch(param.listId){
+			case "general":
+				break;
+			case "important":
+				query.append("important",true.toString())
+				query.append("all",true.toString())
+				break;
+			case "urgent":
+				query.append("urgent",true.toString())
+				query.append("all",true.toString())
+				break;
+			default:
+				query.append("listId",param.listId.toString())
+		}			
+	}		
+	if(param.done)
+		query.append("onlyDone",param.done.toString())
 	await axios.delete("/api/todos?"+query.toString())
+}
+
+export async function GetListWithTodos(id?: string | null): Promise<ListWithTodos>{
+	let list : Promise<List>, todos : Promise<AxiosResponse<Todo[]>>;
+	if(id == "general" || id == undefined || id == null)
+	{
+		list = Promise.resolve({
+			name:"General",
+			id:"general",
+			builtIn:true
+		})
+		todos = axios.get<Todo[]>("/api/todos");
+	}
+	else if(id == "important")
+	{
+		list = Promise.resolve({
+			name:"Important",
+			id:"important",
+			builtIn:true
+		})
+		todos = axios.get<Todo[]>("/api/todos?all=true&important=true");
+	}
+	else if(id == "urgent")
+	{
+		list = Promise.resolve({
+			name:"Urgent",
+			id:"urgent",
+			builtIn:true
+		})
+		todos = axios.get<Todo[]>("/api/todos?all=true&urgent=true");
+	}
+	else
+	{
+		list = GetList(id)
+		todos = axios.get(`/api/todos?listId=${id}`);
+	}
+	let ret = await Promise.all([list,todos])
+	return {...ret[0], todos: ret[1].data};
 }

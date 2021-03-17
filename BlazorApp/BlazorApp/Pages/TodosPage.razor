@@ -12,7 +12,33 @@
 }
 else
 {
+<div style="display:flex; justify-content:space-between;">
     <h3>@vm.List.Name</h3>
+        <Dropdown Placement="@PlacementType.BottomRight" Trigger="@(new TriggerType[] { TriggerType.Click })">
+            <Overlay>
+                <Menu>
+                    <MenuItem>
+                        Rename List
+                    </MenuItem>
+                    <MenuItem OnClick="vm.DeleteList">
+                        Delete list
+                    </MenuItem>
+                    <MenuItem OnClick="vm.DeleteAllTodos">
+                        Delete all items
+                    </MenuItem>
+                    <MenuItem OnClick="vm.DeleteAllDoneTodos">
+                        Delete all done items
+                    </MenuItem>
+                </Menu>
+            </Overlay>
+            <ChildContent>
+                <Button>
+                    <Icon Type="more" Theme="outline" />
+                </Button>
+            </ChildContent>
+        </Dropdown>
+
+</div>
     <Card Size="small" BodyStyle="display: flex; flex-direction: row; align-items: center;">
         <Button Icon="plus">
         </Button>
@@ -24,7 +50,7 @@ else
             <Button @onclick="@(() => vm.ChangeDone(todo))" Icon="@(todo.Done?"check":" ")" />
             <div class="todo-body" @onclick="(()=> vm.ChangeSelected(todo))">
                 <div class="todo-row">
-                    <Icon Type="star" Theme="outline" Style=@($"font-size:1.5em; {(todo.Important?"color: gold":" ")}") @onclick="@(() => vm.ChangeImportant(todo))" />
+                    <Icon Type="star" Theme="outline" Style=@($"font-size:1.5em; {(todo.Important?"color: gold":" ")}") OnClick="@(async(e) => {await vm.ChangeImportant(todo); })"/>
                     <span Style="font-size:1.5em;" @onclick="@(()=>vm.ChangeSelected(todo))">@todo.Title</span>
                 </div>
                 <div class="todo-row">
@@ -134,13 +160,15 @@ else
 
     public async Task OnDeleteTodo()
     {
-        RenderFragment content =@<div>confirm content</div>;
+        RenderFragment content =@<div>@vm.Selected.Title</div>;
 
         var options = new ConfirmOptions()
         {
             Title = "Do you want to delete this?",
             Width = 350,
             Content = content,
+            OkText="Delete",
+            CancelText="Cancel",
             OnOk = async(e) => { await vm.DeleteTodo(); StateHasChanged(); },
             OnCancel = async (e) => { }
         };

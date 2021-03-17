@@ -2,7 +2,9 @@ import { Box, Button, Dialog, DialogTitle, IconButton, makeStyles, Menu, MenuIte
 import { Cancel, Done, MoreHoriz } from "@material-ui/icons";
 import React, { useState } from "react";
 import { QueryObserverResult } from "react-query";
+import { useListDelete, useListHeader, useTodosDelete } from "../../hooks/TodoHooks";
 import { List } from "../../models/List";
+import ConfirmDialog from "../common/ConfirmDialog";
 
 const useStyles = makeStyles(theme => ({
 	dialog:{
@@ -24,6 +26,8 @@ const TodoListHeader :React.FC<IProps>= props => {
 	const [anchorEl, setAnchor] = useState<HTMLElement>();
 	const [edit, setEdit] = useState(false)
 	const [title, setTitle] = useState<string>();
+	const vm = useListHeader(list.data);
+
 	return (
 		<Box display="flex" alignContent="center">
 				<Typography component="h1" variant="h3">{list.data?.name}</Typography>
@@ -32,11 +36,15 @@ const TodoListHeader :React.FC<IProps>= props => {
 			<Menu anchorEl={anchorEl} open={!!anchorEl} onClose={()=>setAnchor(undefined)}>
 				{list.data?.builtIn?"":
 				<>
-					<MenuItem>Delete list</MenuItem>
 					<MenuItem onClick={()=> {setEdit(true); setTitle(list.data?.name)}}>Change title of list</MenuItem>
+					<ConfirmDialog title="Deleting List" body="Are you sure to delete this list?"
+						opener={open => <MenuItem onClick={open}>Delete list</MenuItem>}
+						 onOk={vm.deleteList} onCancel={()=>{}}/>
 				</>
 				}
-				<MenuItem>Delete all done items</MenuItem>
+				<ConfirmDialog title="Deleting List" body="Are you sure to delete this list?"
+					opener={open => <MenuItem onClick={open}>Delete all done items</MenuItem>}
+					onOk={vm.deleteAllDoneTodos} onCancel={()=>{}}/>
 			</Menu>
 			<Dialog open={edit} className={classes.dialog}>
 				<DialogTitle>Editing the title of the list</DialogTitle>

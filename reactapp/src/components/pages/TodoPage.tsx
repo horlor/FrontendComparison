@@ -13,23 +13,23 @@ import ErrorView from "../common/ErrorView";
 
 
 const TodoPage : React.FC = props=>{
-	const {todos, list} = useTodos()
+	const {list} = useTodos()
 
 	return (
 	<NavigationView drawer={<TodoListsDrawer/>}>
 		<AsyncHandler
-			isError={todos.isError || list.isError}
+			isError={list.isError}
 			errorView={<ErrorView error={list.error}/>}
-			isLoading={todos.isLoading || list.isLoading}
+			isLoading={list.isLoading}
 			loader={<LoadingView/>}
 		>
 			<Container>
 			<TodoListHeader list={list}/>
 			<AddTodoView listId={list.data?list.data.id:null}/>
 			{
-			todos.data?todos.data?.map((value, idx)=>(
+			list.data?.todos.map((value, idx)=>(
 					<TodoView key={value.id} todo={value}/>)
-				):""
+				)
 			}
 			</Container>
 		</AsyncHandler>

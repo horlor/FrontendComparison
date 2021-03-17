@@ -123,5 +123,30 @@ namespace BlazorApp.Services
         {
             await httpClient.DeleteAsync($"/api/todos/{todo.Id}");
         }
+
+        public async Task DeleteList(ListDto list)
+        {
+            await httpClient.DeleteAsync($"/api/lists/{list.Id}");
+        }
+
+        public async Task DeleteTodosList(string id, bool onlyDone)
+        {
+            if (id == "general")
+            {
+                await httpClient.DeleteAsync($"/api/todos?onlyDone={onlyDone}");
+            }
+            else if (id == "important")
+            {
+                await httpClient.DeleteAsync($"/api/todos?all=true&important=true&onlyDone={onlyDone}");
+            }
+            else if (id == "urgent")
+            {
+                await httpClient.DeleteAsync($"/api/todos?all=true&urgent=true&onlyDone={onlyDone}");
+            }
+            else
+            {
+                await httpClient.DeleteAsync($"/api/todos?listId={id}&onlyDone={onlyDone}");
+            }
+        }
     }
 }

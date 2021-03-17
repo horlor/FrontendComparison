@@ -1,5 +1,6 @@
 ﻿using BlazorApp.Models;
 using BlazorApp.Services;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,11 @@ namespace BlazorApp.ViewModels
     public class TodosViewModel
     {
         private readonly ApiService service;
-        public TodosViewModel(ApiService service)
+        private readonly NavigationManager navigationManager;
+        public TodosViewModel(ApiService service, NavigationManager navigationManager)
         {
             this.service = service;
+            this.navigationManager = navigationManager;
         }
 
 
@@ -85,6 +88,24 @@ namespace BlazorApp.ViewModels
         {
             await service.ChangeTodoImportant(Selected);
             _selectedRef.Important = !_selectedRef.Important;
+        }
+
+        public async Task DeleteAllTodos()
+        {
+            await service.DeleteTodosList(List.Id, false);
+            await Load(List.Id);
+        }
+
+        public async Task DeleteAllDoneTodos()
+        {
+            await service.DeleteTodosList(List.Id, true);
+            await Load(List.Id);
+        }
+
+        public async Task DeleteList()
+        {
+            await service.DeleteList(List);
+            navigationManager.NavigateTo("/");
         }
     }
 }

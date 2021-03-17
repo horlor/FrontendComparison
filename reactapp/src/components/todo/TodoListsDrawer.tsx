@@ -18,13 +18,13 @@ const TodoListsDrawer : React.FC = props=>{
 			</ListItemIcon>
 			<ListItemText>General</ListItemText>
 		</ListItem>
-		<ListItem button component={Link} to="/">
+		<ListItem button component={Link} to="/urgent">
 			<ListItemIcon>
 				<EventAvailableIcon/>
 			</ListItemIcon>
 			<ListItemText>Urgent</ListItemText>
 		</ListItem>
-		<ListItem button component={Link} to="/">
+		<ListItem button component={Link} to="/important">
 			<ListItemIcon>
 				<LabelImportantIcon/>
 			</ListItemIcon>

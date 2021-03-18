@@ -12,10 +12,12 @@ namespace BlazorApp.ViewModels
     public class TodosViewModel
     {
         private readonly ApiService service;
+        private readonly StoreService store;
         private readonly NavigationManager navigationManager;
         private readonly ModalService modalService;
-        public TodosViewModel(ApiService service, NavigationManager navigationManager, ModalService modalService)
+        public TodosViewModel(ApiService service, NavigationManager navigationManager, ModalService modalService, StoreService store)
         {
+            this.store = store;
             this.service = service;
             this.navigationManager = navigationManager;
             this.modalService = modalService;
@@ -109,6 +111,7 @@ namespace BlazorApp.ViewModels
         {
             await service.DeleteList(List);
             navigationManager.NavigateTo("/");
+            await store.LoadLists();
         }
     }
 }

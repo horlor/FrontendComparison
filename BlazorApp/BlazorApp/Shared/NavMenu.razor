@@ -1,4 +1,4 @@
-﻿@inject ApiService service
+﻿@inject StoreService service
 
 <Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
     @if (lists == null)
@@ -34,8 +34,19 @@
 
     protected async override Task OnInitializedAsync()
     {
-        lists = await service.GetLists();
+        lists = service.Lists;
+        service.PropertyChanged += OnChange;
+        await service.LoadLists();
         await base.OnInitializedAsync();
+    }
+
+    protected async
+
+    private void OnChange(object? sender, PropertyChangedEventArgs e)
+    {
+        lists = service.Lists;
+        StateHasChanged();
+        Console.WriteLine(e.PropertyName);
     }
 
     private bool collapseNavMenu = true;
@@ -46,13 +57,12 @@
 
     private async Task handleOk()
     {
-        var ret = await service.AddList(new ListDto()
+        await service.AddList(new ListDto()
         {
-            Name = newTitle
+            Name=newTitle
         });
         openAddDialog = false;
         newTitle = null;
-        lists.Add(ret);
     }
 
     private void handleCancel()

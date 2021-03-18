@@ -1,4 +1,5 @@
-﻿using BlazorApp.Models;
+﻿using AntDesign;
+using BlazorApp.Models;
 using BlazorApp.Services;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -12,10 +13,12 @@ namespace BlazorApp.ViewModels
     {
         private readonly ApiService service;
         private readonly NavigationManager navigationManager;
-        public TodosViewModel(ApiService service, NavigationManager navigationManager)
+        private readonly ModalService modalService;
+        public TodosViewModel(ApiService service, NavigationManager navigationManager, ModalService modalService)
         {
             this.service = service;
             this.navigationManager = navigationManager;
+            this.modalService = modalService;
         }
 
 

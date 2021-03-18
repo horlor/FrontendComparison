@@ -20,13 +20,13 @@ else
                     <MenuItem>
                         Rename List
                     </MenuItem>
-                    <MenuItem OnClick="vm.DeleteList">
+                    <MenuItem OnClick="OnDeleteList">
                         Delete list
                     </MenuItem>
-                    <MenuItem OnClick="vm.DeleteAllTodos">
+                    <MenuItem OnClick="OnDeleteTodos">
                         Delete all items
                     </MenuItem>
-                    <MenuItem OnClick="vm.DeleteAllDoneTodos">
+                    <MenuItem OnClick="OnDeleteDoneTodos">
                         Delete all done items
                     </MenuItem>
                 </Menu>
@@ -174,6 +174,49 @@ else
         };
 
         var confirmRef = await modalService.CreateConfirmAsync(options);
+
+    }
+
+    public async Task OnDeleteTodos()
+    {
+        await modalService.CreateConfirmAsync(
+        new ConfirmOptions()
+        {
+            Title = "Deleting",
+            OkText = "Ok",
+            Content = "Are you sure to delete all of the todos?",
+            CancelText = "Cancel",
+            OnOk = async (e) => { await vm.DeleteAllTodos(); StateHasChanged(); }
+        });
+
+    }
+
+
+    public async Task OnDeleteDoneTodos()
+    {
+        await modalService.CreateConfirmAsync(
+        new ConfirmOptions()
+        {
+            Title = "Deleting",
+            Content = "Are you sure to delete all the done todos?",
+            OkText = "Ok",
+            CancelText = "Cancel",
+            OnOk = async (e) => { await vm.DeleteAllTodos(); StateHasChanged(); }
+        });
+
+    }
+
+    public async Task OnDeleteList()
+    {
+        await modalService.CreateConfirmAsync(
+        new ConfirmOptions()
+        {
+            Title = "Deleting",
+            Content = "Are you sure to delete this list?",
+            OkText = "Ok",
+            CancelText = "Cancel",
+            OnOk = async (e) => { await vm.DeleteList(); StateHasChanged(); }
+        });
 
     }
 

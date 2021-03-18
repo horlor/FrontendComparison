@@ -58,11 +58,23 @@ export const useTodo = ()=>{
 	const queryClient = useQueryClient();
 	const doneMutation = useMutation<any,Error,Todo,unknown>(SetTodoDone,{
 		onSuccess:(data,variables,context)=>{
+			if(variables.listId == null){
+				queryClient.invalidateQueries(["lists",undefined])
+				queryClient.invalidateQueries(["lists","urgent"])
+				queryClient.invalidateQueries(["lists","important"])
+			}
+			else
 			queryClient.invalidateQueries(["lists",variables.listId]);
 		}
 	})
 	const importantMutation = useMutation<any,Error,Todo,unknown>(SwitchTodoImportant,{
 		onSuccess:(data,variables,context)=>{
+			if(variables.listId == null){
+				queryClient.invalidateQueries(["lists",undefined])
+				queryClient.invalidateQueries(["lists","urgent"])
+				queryClient.invalidateQueries(["lists","important"])
+			}
+			else
 			queryClient.invalidateQueries(["lists",variables.listId]);
 		}
 	})

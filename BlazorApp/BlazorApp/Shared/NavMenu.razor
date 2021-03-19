@@ -1,13 +1,14 @@
-﻿@inject StoreService service
+﻿@inherits StatefulComponentBase<ListsViewModel>
+@inject StoreService service
 
 <Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
-    @if (lists == null)
+    @if (vm.Value == null)
     {
         <span>Loading...</span>
     }
     else
     {
-        @foreach (var list in lists)
+        @foreach (var list in vm.Value)
         {
             <MenuItem Key="@list.Id.ToString()" RouterLink="@list.Id.ToString()" >
                 <Icon Type=@(list.Id == "important"?"star":list.Id=="urgent"?"calendar":list.Id=="general"?"block":"unordered-list") Theme="outline" />
@@ -26,43 +27,27 @@
     OnOk="handleOk"
     OnCancel="handleCancel"
     >
-    <Input @bind-Value="newTitle" Class="inputField" />
+    <Input @bind-Value="vm.NewTitle" Class="inputField" />
 </Modal>
 
 @code {
-    private ICollection<ListDto> lists;
 
     protected async override Task OnInitializedAsync()
     {
-        lists = service.Lists;
-        service.PropertyChanged += OnChange;
-        await service.LoadLists();
+        await service.ListRepo.Invalidate();
         await base.OnInitializedAsync();
     }
 
-    protected async
-
-    private void OnChange(object? sender, PropertyChangedEventArgs e)
-    {
-        lists = service.Lists;
-        StateHasChanged();
-        Console.WriteLine(e.PropertyName);
-    }
 
     private bool collapseNavMenu = true;
 
     private bool openAddDialog = false;
 
-    private string newTitle;
 
     private async Task handleOk()
     {
-        await service.AddList(new ListDto()
-        {
-            Name=newTitle
-        });
+        await vm.AddList();
         openAddDialog = false;
-        newTitle = null;
     }
 
     private void handleCancel()

@@ -22,6 +22,7 @@ namespace BlazorApp
             builder.Services.AddTransient(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
             builder.Services.AddScoped<ApiService>(sp => new ApiService());
             builder.Services.AddScoped<TodosViewModel>();
+            builder.Services.AddTransient<ListsViewModel>();
             builder.Services.AddSingleton<StoreService>();
             builder.Services.AddAntDesign();
 

@@ -111,7 +111,7 @@ namespace BlazorApp.ViewModels
         {
             await service.DeleteList(List);
             navigationManager.NavigateTo("/");
-            await store.LoadLists();
+            await store.ListRepo.Invalidate();
         }
     }
 }

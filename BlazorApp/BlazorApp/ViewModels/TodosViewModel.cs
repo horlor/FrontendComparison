@@ -1,5 +1,6 @@
 ﻿using AntDesign;
 using BlazorApp.Models;
+using BlazorApp.Mvvm;
 using BlazorApp.Services;
 using Microsoft.AspNetCore.Components;
 using System;
@@ -9,22 +10,25 @@ using System.Threading.Tasks;
 
 namespace BlazorApp.ViewModels
 {
-    public class TodosViewModel
+    public class TodosViewModel : ViewModelBase
     {
         private readonly ApiService service;
         private readonly StoreService store;
         private readonly NavigationManager navigationManager;
-        private readonly ModalService modalService;
+        private readonly TodosRepo todosRepo;
         public TodosViewModel(ApiService service, NavigationManager navigationManager, ModalService modalService, StoreService store)
         {
             this.store = store;
             this.service = service;
             this.navigationManager = navigationManager;
-            this.modalService = modalService;
+            this.todosRepo = store.Todos;
+            Subscribe(todosRepo);
         }
 
 
-        public ListWithTodos List { get; set; }
+        public ListWithTodos List {
+            get => todosRepo.Value;
+                }
 
         public TodoDto Selected { get; set; }
 
@@ -35,19 +39,20 @@ namespace BlazorApp.ViewModels
 
         public async Task Load(string ListId)
         {
-            List = await service.GetListWithTodosAsync(ListId);
+            todosRepo.Id = ListId;
             Selected = null;
+            await todosRepo.Invalidate();
         }
 
         public async Task ChangeImportant(TodoDto todo)
         {
-            await service.ChangeTodoDone(todo);
+            await todosRepo.ChangeTodoDone(todo);
             todo.Important = !todo.Important;
         }
 
         public async Task ChangeDone(TodoDto todo)
         {
-            await service.ChangeTodoDone(todo);
+            await todosRepo.ChangeTodoDone(todo);
             todo.Done = !todo.Done;
         }
 
@@ -59,59 +64,51 @@ namespace BlazorApp.ViewModels
 
         public async Task AddTodo()
         {
-            Console.WriteLine(NewTodo);
-            var ret = await service.CreateTodo(new TodoDto()
+            await todosRepo.Add(new TodoDto()
             {
                 Id = null,
                 Title = NewTodo,
                 ListId = List.Id,
             });
-            List.Todos.Insert(0,ret);
             NewTodo = "";
         }
 
         public async Task UpdateTodo()
         {
-            var ret = await service.UpdateTodo(Selected);
-            _selectedRef.Title = ret.Title;
-            _selectedRef.DeadLine = ret.DeadLine;
-            _selectedRef.Description = ret.Description;
+            await todosRepo.Update(Selected);
             Selected = null;
-
         }
 
         public async Task DeleteTodo()
         {
-            await service.DeleteTodo(Selected);
-            _ = List.Todos.Remove(_selectedRef);
-            Selected = null;
-            _selectedRef = null;
-
+            await todosRepo.DeleteTodo(Selected);
         }
 
         public async Task StarSelected()
         {
-            await service.ChangeTodoImportant(Selected);
+            await todosRepo.ChangeTodoImportant(Selected);
             _selectedRef.Important = !_selectedRef.Important;
         }
 
         public async Task DeleteAllTodos()
         {
-            await service.DeleteTodosList(List.Id, false);
-            await Load(List.Id);
+            await todosRepo.DeleteTodos(List, true);
         }
 
         public async Task DeleteAllDoneTodos()
         {
-            await service.DeleteTodosList(List.Id, true);
-            await Load(List.Id);
+            await todosRepo.DeleteTodos(List, true);
         }
 
         public async Task DeleteList()
         {
-            await service.DeleteList(List);
+            await store.ListRepo.DeleteList(List);
             navigationManager.NavigateTo("/");
-            await store.ListRepo.Invalidate();
+        }
+
+        public async override Task Init()
+        {
+            await todosRepo.Invalidate();
         }
     }
 }

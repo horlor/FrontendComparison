@@ -12,5 +12,6 @@ namespace BlazorApp.Services
     public class StoreService
     {
         public ListRepo ListRepo { get; } = new ListRepo();
+        public TodosRepo Todos { get; } = new TodosRepo();
     }
 }

@@ -16,6 +16,7 @@ namespace BlazorApp.ViewModels
         public ListsViewModel(StoreService storeService)
         {
             listRepo = storeService.ListRepo;
+            Subscribe(listRepo);
         }
 
 
@@ -26,12 +27,6 @@ namespace BlazorApp.ViewModels
             {
                 listRepo.Value = value;
             }
-        }
-
-        public override event PropertyChangedEventHandler PropertyChanged
-        {
-            add { listRepo.PropertyChanged += value; }
-            remove { listRepo.PropertyChanged -= value; }
         }
 
         public string NewTitle { get; set; }

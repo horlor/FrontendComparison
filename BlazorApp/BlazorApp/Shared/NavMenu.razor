@@ -1,7 +1,7 @@
 ﻿@inherits StatefulComponentBase<ListsViewModel>
 @inject StoreService service
 
-<Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline" >
+<Menu Theme="MenuTheme.Light" Mode="MenuMode.Inline">
     @if (vm.Value == null)
     {
         <span>Loading...</span>
@@ -10,34 +10,38 @@
     {
         @foreach (var list in vm.Value)
         {
-            <MenuItem Key="@list.Id.ToString()" RouterLink="@list.Id.ToString()" >
-                <Icon Type=@(list.Id == "important"?"star":list.Id=="urgent"?"calendar":list.Id=="general"?"block":"unordered-list") Theme="outline" />
+            <MenuItem Key="@list.Id.ToString()" RouterLink="@list.Id.ToString()">
+                <Icon Type=@(list.Id == "important" ? "star" : list.Id == "urgent" ? "calendar" : list.Id == "general" ? "block" : "unordered-list") Theme="outline" />
                 <span class="nav-text">@list.Name</span>
             </MenuItem>
         }
-        <MenuItem Key="add" OnClick="()=>openAddDialog=true">
+        <MenuItem Key="add" OnClick="() => openAddDialog = true">
             <Icon Type="plus" Theme="outline" />
             <span class="nav-text">Add list</span>
         </MenuItem>
     }
 </Menu>
-<Modal
-    Title="Adding new list"
-    Visible="@openAddDialog"
-    OnOk="handleOk"
-    OnCancel="handleCancel"
-    >
+<Modal Title="Adding new list"
+       Visible="@openAddDialog"
+       OnOk="handleOk"
+       OnCancel="handleCancel">
     <Input @bind-Value="vm.NewTitle" Class="inputField" />
 </Modal>
+@{
+    RenderFragment OkButton = @<Button OnClick="vm.DismissError">Ok</Button>;
+}
+@if (vm.Error != null)
+{
+    <Modal Title=@vm.Error.Title
+           Visible=@(vm.Error != null)
+           Footer="OkButton">
+        @vm.Error.Message
+    </Modal>
+}
+
+
 
 @code {
-
-    protected async override Task OnInitializedAsync()
-    {
-        await service.ListRepo.Invalidate();
-        await base.OnInitializedAsync();
-    }
-
 
     private bool collapseNavMenu = true;
 

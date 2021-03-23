@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace BlazorApp.ViewModels
@@ -31,18 +32,49 @@ namespace BlazorApp.ViewModels
 
         public string NewTitle { get; set; }
 
+        private Error error;
+        public Error Error
+        {
+            get => error;
+            set
+            {
+                SetValue(ref error, value);
+            }
+        }
+
         public async Task AddList()
         {
-            await listRepo.AddList(new ListDto()
+            try
             {
-                Name = NewTitle
-            });
-            NewTitle = "";
+                await listRepo.AddList(new ListDto()
+                {
+                    Name = NewTitle
+                });
+                NewTitle = "";
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+
         }
 
         public async override Task Init()
         {
-            await listRepo.Invalidate();
+            try
+            {
+                await listRepo.Invalidate();
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+
+        }
+
+        public void DismissError()
+        {
+            Error = null;
         }
     }
 }

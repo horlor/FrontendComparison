@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace BlazorApp.ViewModels
 {
@@ -16,23 +18,34 @@ namespace BlazorApp.ViewModels
         private readonly StoreService store;
         private readonly NavigationManager navigationManager;
         private readonly TodosRepo todosRepo;
+        private readonly ModalService modalService;
         public TodosViewModel(ApiService service, NavigationManager navigationManager, ModalService modalService, StoreService store)
         {
             this.store = store;
             this.service = service;
             this.navigationManager = navigationManager;
             this.todosRepo = store.Todos;
+            this.modalService = modalService;
             Subscribe(todosRepo);
         }
 
 
         public ListWithTodos List {
             get => todosRepo.Value;
-                }
+        }
+
+        private Error error;
+        public Error Error
+        {
+            get => error;
+            private set
+            {
+                SetValue(ref error, value);
+            }
+        }
 
         public TodoDto Selected { get; set; }
 
-        private TodoDto _selectedRef;
 
         public string NewTodo { get; set; }
 
@@ -41,74 +54,159 @@ namespace BlazorApp.ViewModels
         {
             todosRepo.Id = ListId;
             Selected = null;
-            await todosRepo.Invalidate();
+            try
+            {
+                await todosRepo.Invalidate();
+            }
+            catch(HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
         }
 
         public async Task ChangeImportant(TodoDto todo)
         {
-            await todosRepo.ChangeTodoDone(todo);
-            todo.Important = !todo.Important;
+            try
+            {
+                await todosRepo.ChangeTodoDone(todo);
+            }
+            catch(HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+
         }
 
         public async Task ChangeDone(TodoDto todo)
         {
-            await todosRepo.ChangeTodoDone(todo);
-            todo.Done = !todo.Done;
+            try
+            {
+                await todosRepo.ChangeTodoDone(todo);
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
         }
 
         public void ChangeSelected(TodoDto todo)
         {
-            Selected = todo?.Clone();
-            _selectedRef = todo;
+            try
+            {
+                Selected = todo?.Clone();
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+
         }
 
         public async Task AddTodo()
         {
-            await todosRepo.Add(new TodoDto()
+            try
             {
-                Id = null,
-                Title = NewTodo,
-                ListId = List.Id,
-            });
-            NewTodo = "";
+                await todosRepo.Add(new TodoDto()
+                {
+                    Id = null,
+                    Title = NewTodo,
+                    ListId = List.Id,
+                });
+                NewTodo = "";
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+
         }
 
         public async Task UpdateTodo()
         {
-            await todosRepo.Update(Selected);
-            Selected = null;
+            try
+            {
+                await todosRepo.Update(Selected);
+                Selected = null;
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
         }
 
         public async Task DeleteTodo()
         {
-            await todosRepo.DeleteTodo(Selected);
+            try
+            {
+                await todosRepo.DeleteTodo(Selected);
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
         }
 
         public async Task StarSelected()
         {
-            await todosRepo.ChangeTodoImportant(Selected);
-            _selectedRef.Important = !_selectedRef.Important;
+            try
+            {
+                await todosRepo.ChangeTodoImportant(Selected);
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
         }
 
         public async Task DeleteAllTodos()
         {
-            await todosRepo.DeleteTodos(List, true);
+            try
+            {
+                await todosRepo.DeleteTodos(List, true);
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+            
         }
 
         public async Task DeleteAllDoneTodos()
         {
-            await todosRepo.DeleteTodos(List, true);
+            try
+            {
+                await todosRepo.DeleteTodos(List, true);
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+            
         }
 
         public async Task DeleteList()
         {
-            await store.ListRepo.DeleteList(List);
-            navigationManager.NavigateTo("/");
+            try
+            {
+                await store.ListRepo.DeleteList(List);
+                navigationManager.NavigateTo("/");
+            }
+            catch (HttpRequestException e)
+            {
+                Error = Error.FromException(e);
+            }
+
         }
 
-        public async override Task Init()
+        public override Task Init()
         {
-            await todosRepo.Invalidate();
+            return Task.CompletedTask;
         }
+
+        public void DismissError()
+        {
+            Error = null;
+        }
+
     }
 }

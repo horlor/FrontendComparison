@@ -1,19 +1,19 @@
 ﻿@page "/{ListId}"
 @inject TodosViewModel vm
-@inject ModalService modalService 
+@inject ModalService modalService
 
 @{
     RenderFragment DescLabel = @<label> Deadline </label>;
 }
 
-@if (vm.List == null)
+@if (vm.List == null && vm.Error == null)
 {
     <h3>Loading...</h3>
 }
 else
 {
-<div style="display:flex; justify-content:space-between;">
-    <h3>@vm.List.Name</h3>
+    <div style="display:flex; justify-content:space-between;">
+        <h3>@vm.List.Name</h3>
         <Dropdown Placement="@PlacementType.BottomRight" Trigger="@(new TriggerType[] { TriggerType.Click })">
             <Overlay>
                 <Menu>
@@ -38,7 +38,7 @@ else
             </ChildContent>
         </Dropdown>
 
-</div>
+    </div>
     <Card Size="small" BodyStyle="display: flex; flex-direction: row; align-items: center;">
         <Button Icon="plus">
         </Button>
@@ -50,7 +50,7 @@ else
             <Button @onclick="@(() => vm.ChangeDone(todo))" Icon="@(todo.Done?"check":" ")" />
             <div class="todo-body" @onclick="(()=> vm.ChangeSelected(todo))">
                 <div class="todo-row">
-                    <Icon Type="star" Theme="outline" Style=@($"font-size:1.5em; {(todo.Important?"color: gold":" ")}") OnClick="@(async(e) => {await vm.ChangeImportant(todo); })"/>
+                    <Icon Type="star" Theme="outline" Style=@($"font-size:1.5em; {(todo.Important?"color: gold":" ")}") OnClick="@(async(e) => {await vm.ChangeImportant(todo); })" />
                     <span Style="font-size:1.5em;" @onclick="@(()=>vm.ChangeSelected(todo))">@todo.Title</span>
                 </div>
                 <div class="todo-row">
@@ -65,7 +65,7 @@ else
                     }
                     @if (!String.IsNullOrEmpty(todo.Description))
                     {
-                        <Icon Type="paper-clip" Theme="outline"/>
+                        <Icon Type="paper-clip" Theme="outline" />
                     }
                     <span>&emsp;</span>
                 </div>
@@ -81,7 +81,7 @@ else
                     <Button @onclick="@(() => vm.ChangeDone(vm.Selected))" Icon="@(vm.Selected.Done?"check":" ")" />
                     <Input @bind-Value="context.Title" Class="inputField" />
                     <Button Icon="star" @onclick="vm.StarSelected" style=@(vm.Selected.Important?"color: gold":" ")></Button>
-                    <Button Icon="delete" @onclick="OnDeleteTodo"/>
+                    <Button Icon="delete" @onclick="OnDeleteTodo" />
                 </div>
                 <label class="input-label" htmlFor="editview-deadline">Deadline</label>
                 <DatePicker Id="editview-deadline" Class="inputField" TValue="DateTime?" @bind-Value="context.DeadLine" Picker="@DatePickerType.Date" />
@@ -91,6 +91,17 @@ else
             </Form>
         </Drawer>
     }
+}
+@{
+    RenderFragment OkButton = @<Button OnClick="vm.DismissError">Ok</Button>;
+}
+@if (vm.Error != null)
+{
+    <Modal Title=@vm.Error.Title
+           Visible=@(vm.Error != null)
+           Footer="OkButton">
+        @vm.Error.Message
+    </Modal>
 }
 
 
@@ -162,62 +173,62 @@ else
     {
         RenderFragment content =@<div>@vm.Selected.Title</div>;
 
-        var options = new ConfirmOptions()
-        {
-            Title = "Do you want to delete this?",
-            Width = 350,
-            Content = content,
-            OkText="Delete",
-            CancelText="Cancel",
-            OnOk = async(e) => { await vm.DeleteTodo(); StateHasChanged(); },
-            OnCancel = async (e) => { }
-        };
+var options = new ConfirmOptions()
+{
+Title = "Do you want to delete this?",
+Width = 350,
+Content = content,
+OkText = "Delete",
+CancelText = "Cancel",
+OnOk = async (e) => { await vm.DeleteTodo(); StateHasChanged(); },
+OnCancel = async (e) => { }
+};
 
-        var confirmRef = await modalService.CreateConfirmAsync(options);
+var confirmRef = await modalService.CreateConfirmAsync(options);
 
-    }
+}
 
-    public async Task OnDeleteTodos()
-    {
-        await modalService.CreateConfirmAsync(
-        new ConfirmOptions()
-        {
-            Title = "Deleting",
-            OkText = "Ok",
-            Content = "Are you sure to delete all of the todos?",
-            CancelText = "Cancel",
-            OnOk = async (e) => { await vm.DeleteAllTodos(); StateHasChanged(); }
-        });
+public async Task OnDeleteTodos()
+{
+await modalService.CreateConfirmAsync(
+new ConfirmOptions()
+{
+Title = "Deleting",
+OkText = "Ok",
+Content = "Are you sure to delete all of the todos?",
+CancelText = "Cancel",
+OnOk = async (e) => { await vm.DeleteAllTodos(); StateHasChanged(); }
+});
 
-    }
+}
 
 
-    public async Task OnDeleteDoneTodos()
-    {
-        await modalService.CreateConfirmAsync(
-        new ConfirmOptions()
-        {
-            Title = "Deleting",
-            Content = "Are you sure to delete all the done todos?",
-            OkText = "Ok",
-            CancelText = "Cancel",
-            OnOk = async (e) => { await vm.DeleteAllTodos(); StateHasChanged(); }
-        });
+public async Task OnDeleteDoneTodos()
+{
+await modalService.CreateConfirmAsync(
+new ConfirmOptions()
+{
+Title = "Deleting",
+Content = "Are you sure to delete all the done todos?",
+OkText = "Ok",
+CancelText = "Cancel",
+OnOk = async (e) => { await vm.DeleteAllTodos(); StateHasChanged(); }
+});
 
-    }
+}
 
-    public async Task OnDeleteList()
-    {
-        await modalService.CreateConfirmAsync(
-        new ConfirmOptions()
-        {
-            Title = "Deleting",
-            Content = "Are you sure to delete this list?",
-            OkText = "Ok",
-            CancelText = "Cancel",
-            OnOk = async (e) => { await vm.DeleteList(); StateHasChanged(); }
-        });
+public async Task OnDeleteList()
+{
+await modalService.CreateConfirmAsync(
+new ConfirmOptions()
+{
+Title = "Deleting",
+Content = "Are you sure to delete this list?",
+OkText = "Ok",
+CancelText = "Cancel",
+OnOk = async (e) => { await vm.DeleteList(); StateHasChanged(); }
+});
 
-    }
+}
 
 }

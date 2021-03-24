@@ -62,6 +62,10 @@ namespace BlazorApp.ViewModels
             {
                 Error = Error.FromException(e);
             }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         public async Task ChangeImportant(TodoDto todo)

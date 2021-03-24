@@ -3,6 +3,7 @@ using BlazorApp.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace BlazorApp.Services
@@ -11,8 +12,20 @@ namespace BlazorApp.Services
     {
         private readonly ApiService api = new ApiService();
         public string Id { get; set; }
-        public async override Task Invalidate() { 
-            Value = await api.GetListWithTodosAsync(Id);
+        public async override Task Invalidate() {
+            try
+            {
+                var res = await api.GetListWithTodosAsync(Id);
+                Value = res;
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.GetType());
+                Console.WriteLine(e.Message);
+                Console.WriteLine(Value== null);
+                throw;
+            }
+
         }
 
         public async Task ChangeTodoDone(TodoDto todoDto)

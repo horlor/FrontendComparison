@@ -13,18 +13,8 @@ namespace BlazorApp.Services
         private readonly ApiService api = new ApiService();
         public string Id { get; set; }
         public async override Task Invalidate() {
-            try
-            {
                 var res = await api.GetListWithTodosAsync(Id);
                 Value = res;
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.GetType());
-                Console.WriteLine(e.Message);
-                Console.WriteLine(Value== null);
-                throw;
-            }
 
         }
 

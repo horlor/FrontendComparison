@@ -14,8 +14,12 @@ export async function UpdateTodo(todo: Todo){
 }
 
 export async function AddTodo(todo: Todo) {
-	if(todo.listId == "general" || todo.listId == "urgent" || todo.listId == "urgent")
+	if(todo.listId == "general" || todo.listId == "important" || todo.listId == "urgent")
 		todo.listId = null;
+	if(todo.listId =="important")
+		todo.important = true;
+	if(todo.listId == "urgent")
+		todo.deadLine = todo.deadLine; //TODO handling urgent adding
 	return (await axios.post<Todo>("/api/todos",todo)).data
 }
 

@@ -3,6 +3,7 @@
 	console.log(id)
 
 	import {GetListWithTodos} from "../../api/TodoApi"
+import AddTodoView from "../todo/AddTodoView.svelte"
 import TodoCard from "../todo/TodoCard.svelte"
 </script>
 
@@ -11,6 +12,7 @@ import TodoCard from "../todo/TodoCard.svelte"
 	Loading...
 {:then list} 
 	<h2>{list.name}</h2>
+	<AddTodoView id={id}/>
 	{#each list.todos as todo}
 		<TodoCard todo="{todo}"/>
 	{/each}

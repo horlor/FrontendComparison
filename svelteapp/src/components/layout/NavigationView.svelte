@@ -58,7 +58,7 @@ let navDrawerOpen = false;
 		</nav>
 		<main class="overflow-y-scroll h-full w-full bg-gray-100">
 			<div class="h-16"/>
-			<slot>Placeholder for main</slot>
+			<slot name="main">Placeholder for main</slot>
 		</main>
 	</div>
 </div>

@@ -15,7 +15,7 @@ namespace BlazorApp.Services
         public ApiService()
         {
             httpClient.BaseAddress = new Uri( "http://localhost:5000/");
-            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTE0NzY3OS0wMjFlLTRiOGMtYjJmZi1kNTVhY2YxYTBmMmMiLCJqdGkiOiJlNmU3Yzc5Mi03Y2JkLTRhM2ItYjA0Ni1iYjY4YzRmNGJhOWUiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxNjgzODk5NSwiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ.arl6MQqt1uYQtwMlEitcywMS4IUY1aunoXrffRY9T80");
+            httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTE0NzY3OS0wMjFlLTRiOGMtYjJmZi1kNTVhY2YxYTBmMmMiLCJqdGkiOiJiOWEwZWE2Mi1jNzYyLTQ4MTAtYjgxMC1mZjJjZmY4NmUxZmEiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxODIxNjcyNywiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ.EF0BwPLDJBAuYdHrXzO3LGwprAEVXdzTBLl61JV9SNo");
         }
 
         public async Task<ICollection<ListDto>> GetLists()

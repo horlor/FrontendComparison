@@ -17,5 +17,5 @@ import { AddTodo } from "../../api/TodoApi";
 			</g>
 		</svg>
 	</button>
-	<input on:keyup={keypress} bind:value={title} placeholder="Type here your to dos... (Press enter to save)" class="flex-grow border border-gray-300 rounded-md p-1 m-1">
-</div>
+	<input on:keyup={keypress} bind:value={title} placeholder="Type here your to dos... (Press enter to save)" class="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-blue-500 focus:z-10 sm:text-sm">
+</div> 

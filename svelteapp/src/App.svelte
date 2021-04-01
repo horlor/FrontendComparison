@@ -9,10 +9,9 @@
 	axios.defaults.headers["Authorization"] = "Bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTE0NzY3OS0wMjFlLTRiOGMtYjJmZi1kNTVhY2YxYTBmMmMiLCJqdGkiOiJiOWEwZWE2Mi1jNzYyLTQ4MTAtYjgxMC1mZjJjZmY4NmUxZmEiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxODIxNjcyNywiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ.EF0BwPLDJBAuYdHrXzO3LGwprAEVXdzTBLl61JV9SNo"
 
 	export let url = "/"
-	console.log("url: ", url)
 </script>
 
-<Router url="{url}">
+<Router url={url}>
 	<NavigationView>
 		<ListsMenu slot="nav"/>
 		<div slot="main">

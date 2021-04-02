@@ -13,7 +13,9 @@
 
 <Router url={url}>
 	<NavigationView>
-		<ListsMenu slot="nav"/>
+		<svelte:fragment slot="nav">
+			<ListsMenu/>
+		</svelte:fragment>
 		<div slot="main">
 			<Route  path="/:id" let:params>
 				<TodosPage id="{params.id}"/>

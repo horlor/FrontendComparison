@@ -13,7 +13,7 @@ function clickAway(node, { enabled: initialEnabled,  onClickAway }) {
       }
     }
 
-    update({ enabled: initialEnabled });
+    setTimeout(()=>update({ enabled: initialEnabled }),5)
     return {
       update,
       destroy() {

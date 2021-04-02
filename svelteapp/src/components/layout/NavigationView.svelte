@@ -1,6 +1,6 @@
 <script>
 let navDrawerOpen = false;
-
+import clickAway from "../util/ClickAway"
 </script>
 
 <div class="body overflow-hidden">
@@ -60,7 +60,7 @@ let navDrawerOpen = false;
 	</div>
 </div>
 {#if navDrawerOpen}
-	<nav class="fixed h-screen left-0 top-0 md:invisible bg-white w-64">
+	<nav use:clickAway={{enabled:true, onClickAway:()=> navDrawerOpen = false}} class="fixed h-screen left-0 top-0 md:invisible bg-white w-64">
 		<div class="h-16"/>
 		<slot name="nav">
 		</slot>

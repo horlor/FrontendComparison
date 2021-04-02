@@ -2,7 +2,9 @@
 import { UpdateTodo } from "../../api/TodoApi";
 
 import type { Todo } from "../../models/Todo";
-import ClickAwayListener from "../layout/ClickAwayListener.svelte";
+import clickAway from "../util/ClickAway"
+import DateInput from "../util/DateInput.svelte";
+
 	export let todo: Todo  | undefined
 
 	function handleClick(){
@@ -17,10 +19,9 @@ import ClickAwayListener from "../layout/ClickAwayListener.svelte";
 		await UpdateTodo(todo);
 	}
 
-	let date = Date.now();
 </script>
 {#if !!todo}
-	<div class="fixed h-screen right-0 top-0 w-480px z-20 border-gray-100 border-l-2 bg-white p-2" >
+	<div use:clickAway={{enabled:false, onClickAway:()=>close()}} class="fixed h-screen right-0 top-0 w-480px z-20 border-gray-100 border-l-2 bg-white p-2" >
 		<button class="inline-block text-right" on:click={close}>
 			<svg class="h-6 w-6 text-gray-500 fill-current" viewBox="0 0 20 20">
 				<path d="M15.898,4.045c-0.271-0.272-0.713-0.272-0.986,0l-4.71,4.711L5.493,4.045c-0.272-0.272-0.714-0.272-0.986,0s-0.272,0.714,0,0.986l4.709,4.711l-4.71,4.711c-0.272,0.271-0.272,0.713,0,0.986c0.136,0.136,0.314,0.203,0.492,0.203c0.179,0,0.357-0.067,0.493-0.203l4.711-4.711l4.71,4.711c0.137,0.136,0.314,0.203,0.494,0.203c0.178,0,0.355-0.067,0.492-0.203c0.273-0.273,0.273-0.715,0-0.986l-4.711-4.711l4.711-4.711C16.172,4.759,16.172,4.317,15.898,4.045z"></path>
@@ -37,7 +38,7 @@ import ClickAwayListener from "../layout/ClickAwayListener.svelte";
 			<input bind:value={todo.title} class="appearance-none block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"/>
 		</div>
 		<label class="block" for="todo-detail-date">Deadline:</label>
-		<input type="date" bind:value={date}>
+		<DateInput id="todo-detail-date" bind:value={todo.deadLine}/>
 
 		<label class="block" for="todo-detail-desc">Description:</label>
 		<textarea class="appearance-none block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" id="todo-detail-desc" bind:value={todo.description}/>

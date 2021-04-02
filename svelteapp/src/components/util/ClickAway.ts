@@ -1,8 +1,7 @@
-<script lang="ts">
-function clickOutside(node, { enabled: initialEnabled, cb }) {
+function clickAway(node, { enabled: initialEnabled,  onClickAway }) {
     const handleOutsideClick = ({ target }) => {
       if (!node.contains(target)) {
-        cb();
+        onClickAway();
       }
     };
 
@@ -23,9 +22,4 @@ function clickOutside(node, { enabled: initialEnabled, cb }) {
     };
   }
 
-  let open = true;
-
-</script>
-<div use:clickOutside={{enabled: true, cb:()=>{open = false; console.log("clicked Away",open)}}}>
-	<slot></slot>
-</div>
+export default clickAway;

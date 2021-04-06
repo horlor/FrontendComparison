@@ -1,11 +1,11 @@
 <script lang="ts">
-import { AddTodo } from "../../api/TodoApi";
+import TodosRepo from "../../stores/TodosStore"
 	export let id="general";
 
 	let title = ""
 	function keypress(e : KeyboardEvent){
 		if(e.code=="Enter")
-			AddTodo({title:title, important:false, done: false, id:"",deadLine:null, ownerId:"", listId:id})
+			TodosRepo.addTodo({title:title, important:false, done: false, id:"",deadLine:null, ownerId:"", listId:id})
 	}
 </script>
 <div class="w-full bg-white border-gray-300 shadow-md rounded-md p-2 flex flex-row m-2 items-center">

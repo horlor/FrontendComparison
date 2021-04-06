@@ -1,6 +1,7 @@
 import {writable} from "svelte/store"
 import { GetLists } from "../api/ListsApi";
 import type { List } from "../models/List"
+import type { Todo } from "../models/Todo";
 import  readOnly from "./ReadOnlyStore"
 
 class ListRepoClass{

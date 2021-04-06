@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ListRepo from "../../stores/ListsStore"
-	import MenuLink from "../layout/MenuLink.svelte"
+	import MenuLink from "../util/MenuLink.svelte"
 	var lists = ListRepo.lists
 	ListRepo.load();
 </script>

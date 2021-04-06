@@ -1,6 +1,7 @@
 import { writable } from "svelte/store";
-import { GetListWithTodos } from "../api/TodoApi";
+import { AddTodo, RemoveTodo, GetListWithTodos, UpdateTodo, SwitchTodoImportant, SetTodoDone } from "../api/TodoApi";
 import type { ListWithTodos } from "../models/List";
+import type { Todo } from "../models/Todo";
 import readOnly from "./ReadOnlyStore";
 
 class TodosRepoClass{
@@ -21,6 +22,31 @@ class TodosRepoClass{
 
 	public async invalidate(){
 		this.store.set(await GetListWithTodos(this._id))
+	}
+
+	public async updateTodo(todo:Todo){
+		await UpdateTodo(todo);
+		this.invalidate();
+	}
+
+	public async addTodo(todo: Todo){
+		await AddTodo(todo);
+		this.invalidate();
+	}
+
+	public async deleteTodo(todo:Todo){
+		await RemoveTodo(todo);
+		this.invalidate();
+	}
+
+	public async setTodoImportant(todo: Todo){
+		await SwitchTodoImportant(todo);
+		this.invalidate();
+	}
+
+	public async setTodoDone(todo: Todo){
+		await SetTodoDone(todo)
+		this.invalidate();
 	}
 }
 

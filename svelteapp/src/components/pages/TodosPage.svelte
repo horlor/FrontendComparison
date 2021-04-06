@@ -5,7 +5,7 @@ import AddTodoView from "../todo/AddTodoView.svelte"
 import TodoCard from "../todo/TodoCard.svelte"
 import TodoDetailPanel from "../todo/TodoDetailPanel.svelte"
 import TodosRepo from "../../stores/TodosStore"
-	let selected : Todo | undefined = undefined;
+	let selected : Todo | undefined =undefined;
 let list = TodosRepo.list
 $: TodosRepo.id = id;
 </script>
@@ -23,4 +23,4 @@ $: TodosRepo.id = id;
 	<p>Loading...</p>
 {/if}
 </div>
-<TodoDetailPanel bind:todo={selected}/>
+<TodoDetailPanel todo={selected}/>

@@ -3,6 +3,7 @@
 	import MenuLink from "../util/MenuLink.svelte"
 	var lists = ListRepo.lists
 	ListRepo.load();
+	console.log(lists)
 </script>
 <MenuLink to="/general">General</MenuLink>
 <MenuLink to="/important">Important</MenuLink>

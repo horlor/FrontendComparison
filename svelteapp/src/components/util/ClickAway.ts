@@ -1,6 +1,6 @@
 function clickAway(node, { enabled: initialEnabled,  onClickAway }) {
     const handleOutsideClick = ({ target }) => {
-      if (!node.contains(target)) {
+      if (!node.contains(target) && initialEnabled) {
         onClickAway();
       }
     };

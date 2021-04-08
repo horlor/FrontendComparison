@@ -5,14 +5,23 @@ import AddTodoView from "../todo/AddTodoView.svelte"
 import TodoCard from "../todo/TodoCard.svelte"
 import TodoDetailPanel from "../todo/TodoDetailPanel.svelte"
 import TodosRepo from "../../stores/TodosStore"
+import { afterUpdate } from "svelte";
+import ListHeader from "../list/ListHeader.svelte";
 	let selected : Todo | undefined =undefined;
 let list = TodosRepo.list
 $: TodosRepo.id = id;
+
+afterUpdate(()=>{
+	if($list && selected){
+		selected = $list.todos.find(t => t.id == selected.id)
+	}
+		
+})
 </script>
 
-<div class="container mx-auto px-2">
+<div class="container mx-auto pl-2 pr-3">
 {#if $list}
-<h2 class="font-bold text-2xl">{$list.name}</h2>
+<ListHeader list={$list}/>
 <AddTodoView id={id}/>
 {#each $list.todos as todo}
 	<TodoCard todo="{todo}" on:click={()=>{

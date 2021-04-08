@@ -133,6 +133,8 @@ namespace TodoApi.Controllers
                 query = query.Where(t => t.Important);
             if (urgent)
                 query = query.Where(t => t.DeadLine < DateTime.Now + new TimeSpan(7, 0, 0, 0));
+            if (onlyDone)
+                query = query.Where(t => t.Done);
             dbContext.RemoveRange(query);
             await dbContext.SaveChangesAsync();
             return NoContent(); 

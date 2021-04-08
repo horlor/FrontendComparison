@@ -1,8 +1,10 @@
 import {writable} from "svelte/store"
 import { GetLists } from "../api/ListsApi";
 import type { List } from "../models/List"
+import {RemoveList} from "../api/ListsApi"
 import type { Todo } from "../models/Todo";
 import  readOnly from "./ReadOnlyStore"
+import { get } from 'svelte/store';
 
 class ListRepoClass{
 	private store = writable<List[]>([])
@@ -16,6 +18,11 @@ class ListRepoClass{
 			this.loaded = true;
 			await this.invalidate();
 		}
+	}
+
+	public async deleteList(list: List){
+		await RemoveList(list);
+		this.invalidate();
 	}
 
 	public async invalidate(){

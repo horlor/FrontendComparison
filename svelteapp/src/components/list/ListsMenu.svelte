@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ListRepo from "../../stores/ListsStore"
 	import MenuLink from "../util/MenuLink.svelte"
+import AddListView from "./AddListView.svelte";
 	var lists = ListRepo.lists
 	let error = ListRepo.error
 	ListRepo.load();
@@ -16,6 +17,7 @@
 		{#each $lists as list}
 		<MenuLink to="{list.id}">{list.name}</MenuLink>
 		{/each}
+		<AddListView/>
 	{:else}
 	<p>Loading...</p>
 	{/if}

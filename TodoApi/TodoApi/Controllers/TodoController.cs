@@ -60,6 +60,7 @@ namespace TodoApi.Controllers
         [HttpPost]
         public async Task<IActionResult> AddTodo([FromBody] TodoDto todo)
         {
+            Console.WriteLine(UserId);
             var list = await dbContext.TodoLists.FirstOrDefaultAsync(l => l.Id == todo.ListId);
             if (list == null && todo.ListId != null)
                 return Conflict();

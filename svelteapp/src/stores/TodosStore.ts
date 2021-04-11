@@ -1,11 +1,16 @@
 import { writable } from "svelte/store";
+import { parseError } from "../api/ErrorUtil";
 import { AddTodo, RemoveTodo, GetListWithTodos, UpdateTodo, SwitchTodoImportant, SetTodoDone, DeleteTodos } from "../api/TodoApi";
+import type { AppError } from "../models/Error";
 import type { ListWithTodos } from "../models/List";
 import type { Todo } from "../models/Todo";
 import readOnly from "./ReadOnlyStore";
 
 class TodosRepoClass{
 	private store = writable<ListWithTodos>(null)
+	private _error = writable<AppError>(null)
+	private _operationError = writable<AppError>(null)
+
 	private _id = "general"
 
 	public set id(value: string){
@@ -20,43 +25,91 @@ class TodosRepoClass{
 		return readOnly(this.store)
 	}
 
+	get error(){
+		return readOnly(this._error)
+	}
+	get operationError(){
+		return readOnly(this._operationError)
+	}
+
 	public async invalidate(){
-		this.store.set(await GetListWithTodos(this._id))
+		try{
+			this._error.set(undefined)
+			this.store.set(await GetListWithTodos(this._id))
+		}
+		catch(e){
+			this._error.set(parseError(e))
+		}
 	}
 
 	public async updateTodo(todo:Todo){
-		await UpdateTodo(todo);
-		this.invalidate();
+		try{
+			await UpdateTodo(todo);
+			this.invalidate();
+		}
+		catch(e){
+			this._operationError.set(parseError(e))
+		}
 	}
 
 	public async addTodo(todo: Todo){
-		await AddTodo(todo);
-		this.invalidate();
+		try{
+			await AddTodo(todo);
+			this.invalidate();
+		}
+		catch(e){
+			this._operationError.set(parseError(e))
+		}
 	}
 
 	public async deleteTodo(todo:Todo){
-		await RemoveTodo(todo);
-		this.invalidate();
+		try{
+			await RemoveTodo(todo);
+			this.invalidate();
+		}
+		catch(e){
+			this._operationError.set(parseError(e))
+		}
 	}
 
 	public async setTodoImportant(todo: Todo){
-		await SwitchTodoImportant(todo);
-		this.invalidate();
+		try{
+			await SwitchTodoImportant(todo);
+			this.invalidate();
+		}
+		catch(e){
+			this._operationError.set(parseError(e))
+		}
 	}
 
 	public async setTodoDone(todo: Todo){
-		await SetTodoDone(todo)
-		this.invalidate();
+		try{
+			await SetTodoDone(todo)
+			this.invalidate();
+		}
+		catch(e){
+			this._operationError.set(parseError(e))
+		}
 	}
 
 	public async deleteAllTodos(){
-		await DeleteTodos({done:false,listId: this.id})
-		this.invalidate();
+		try{
+			await DeleteTodos({done:false,listId: this.id})
+			this.invalidate();
+		}
+		catch(e){
+			this._operationError.set(parseError(e))
+		}
 	}
 
 	public async deleteAllDoneTodos(){
-		await DeleteTodos({done:true,listId: this.id})
-		this.invalidate();
+		try{
+			await DeleteTodos({done:true,listId: this.id})
+			this.invalidate();
+		}
+		catch(e){
+			this._operationError.set(parseError(e))
+		}
 	}
 }
 

@@ -4,7 +4,7 @@ import TodosRepo from "../../stores/TodosStore"
 import type { Todo } from "../../models/Todo";
 import clickAway from "../util/ClickAway"
 import DateInput from "../util/DateInput.svelte";
-import ConfirmDialog from "../util/ConfirmDialog.svelte";
+import ConfirmDialog from "../common/ConfirmDialog.svelte";
 
 	export let todo: Todo  | undefined
 

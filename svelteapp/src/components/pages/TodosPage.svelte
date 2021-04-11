@@ -7,8 +7,12 @@ import TodoDetailPanel from "../todo/TodoDetailPanel.svelte"
 import TodosRepo from "../../stores/TodosStore"
 import { afterUpdate } from "svelte";
 import ListHeader from "../list/ListHeader.svelte";
+import ErrorCard from "../common/ErrorCard.svelte";
+import OperationErrorHandler from "../common/OperationErrorHandler.svelte";
 	let selected : Todo | undefined =undefined;
 let list = TodosRepo.list
+let error =  TodosRepo.error
+let operationError = TodosRepo.operationError
 $: TodosRepo.id = id;
 
 afterUpdate(()=>{
@@ -18,18 +22,22 @@ afterUpdate(()=>{
 		
 })
 </script>
-
-<div class="container mx-auto pl-2 pr-3">
-{#if $list}
-<ListHeader list={$list}/>
-<AddTodoView id={id}/>
-{#each $list.todos as todo}
-	<TodoCard todo="{todo}" on:click={()=>{
-		selected = todo;
-	}}/>
-{/each}
-{:else} 
-	<p>Loading...</p>
+{#if $error}
+	<ErrorCard error={$error}/>
+{:else}
+	<div class="container mx-auto pl-2 pr-3">
+		{#if $list}
+		<ListHeader list={$list}/>
+		<AddTodoView id={id}/>
+		{#each $list.todos as todo}
+			<TodoCard todo="{todo}" on:click={()=>{
+				selected = todo;
+			}}/>
+		{/each}
+		{:else} 
+			<p>Loading...</p>
+		{/if}
+	</div>
+	<TodoDetailPanel todo={selected}/>
 {/if}
-</div>
-<TodoDetailPanel todo={selected}/>
+<OperationErrorHandler error={$operationError}/>

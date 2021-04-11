@@ -4,8 +4,11 @@ import TodosRepo from "../../stores/TodosStore"
 
 	let title = ""
 	function keypress(e : KeyboardEvent){
-		if(e.code=="Enter")
+		if(e.code=="Enter"){
 			TodosRepo.addTodo({title:title, important:false, done: false, id:"",deadLine:null, ownerId:"", listId:id})
+			title = ""
+		}
+			
 	}
 </script>
 <div class="w-full bg-white border-gray-300 shadow-md rounded-md p-2 flex flex-row m-2 items-center">

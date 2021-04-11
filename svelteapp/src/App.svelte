@@ -6,7 +6,7 @@
 	import TodosPage from "./components/pages/TodosPage.svelte"
 
 	axios.defaults.baseURL="http://localhost:5000"
-	axios.defaults.headers["Authorization"] = "Bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhNTE0NzY3OS0wMjFlLTRiOGMtYjJmZi1kNTVhY2YxYTBmMmMiLCJqdGkiOiJiOWEwZWE2Mi1jNzYyLTQ4MTAtYjgxMC1mZjJjZmY4NmUxZmEiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxODIxNjcyNywiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ.EF0BwPLDJBAuYdHrXzO3LGwprAEVXdzTBLl61JV9SNo"
+	axios.defaults.headers["Authorization"] = "Bearer "+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyMTk2NGYxYy04MzE0LTQ0ZWQtYTAxNC00NDU4YzM0ZTY1NGMiLCJqdGkiOiJkOGUwOGUwZC0zOTdhLTQ0NjQtODBiNi0yYjkzZjkyZDkwODYiLCJ1c2VybmFtZSI6ImxvcmFudCIsImV4cCI6MTYxOTQzMDcyNywiaXNzIjoiVG9kbyIsImF1ZCI6IlRvZG8tdXNlcnMifQ.FhO5c4RHCmDNuB1hj9mr_psE5rGEOckMILz9YXBAOzQ"
 
 	export let url = "/"
 </script>

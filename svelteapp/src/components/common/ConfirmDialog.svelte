@@ -1,7 +1,7 @@
 <script lang="ts">
 import { createEventDispatcher } from "svelte";
 
-	import Modal from "./Modal.svelte"
+	import Modal from "../util/Modal.svelte"
 	
 	export let title =""
 	export let body=""

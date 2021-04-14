@@ -7,6 +7,7 @@ import  readOnly from "./ReadOnlyStore"
 import { get } from 'svelte/store';
 import type { AppError } from "../models/Error";
 import { parseError } from "../api/ErrorUtil";
+import TodosRepo from "./TodosStore";
 
 class ListRepoClass{
 	private store = writable<List[]>([])
@@ -65,6 +66,7 @@ class ListRepoClass{
 		try{
 			await UpdateList(list);
 			this.invalidate();
+			TodosRepo.invalidate();
 		}
 		catch(e){
 			this._operationError.set(parseError(e))

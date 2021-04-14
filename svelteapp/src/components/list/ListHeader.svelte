@@ -4,10 +4,12 @@ import Menu from "../util/Menu.svelte";
 import MenuItem from "../util/MenuItem.svelte";
 import TodosRepo from "../../stores/TodosStore"
 import ListsStore from "../../stores/ListsStore"
+import AddListView from "./AddListView.svelte";
 
 	export let list : ListWithTodos
 
 	let open = false;
+	let editOpen = false;
 </script>
 <div class="flex flex-row justify-between mt-1">
 	<h3 class="text-2xl">{list.name}</h3>
@@ -17,6 +19,9 @@ import ListsStore from "../../stores/ListsStore"
 		</button>
 		<Menu open={open}>
 			{#if !list.builtIn}
+			<MenuItem on:click={()=> editOpen= true}>
+				Edit Lists title
+			</MenuItem>
 			<MenuItem on:click={()=> ListsStore.deleteList(list)}>
 				Delete List
 			</MenuItem>
@@ -29,5 +34,5 @@ import ListsStore from "../../stores/ListsStore"
 			</MenuItem>
 		</Menu>
 	</div>
-
+	<AddListView list={list} open={editOpen}/>
 </div>

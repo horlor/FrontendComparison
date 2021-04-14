@@ -19,7 +19,7 @@
 		From: "transform opacity-100 scale-100"
 		To: "transform opacity-0 scale-95"
 	-->
-	<div use:clickaway={param} class={"origin-top-right z-30 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none transition ease-out duration-80 "
+	<div use:clickaway={param} class={"origin-top-right z-20 absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none transition ease-out duration-80 "
 				+ (open?" transform opacity-100 scale-100":" transform opacity-0 scale-95")} role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
 		<slot></slot>
 	</div>

@@ -5,11 +5,18 @@ import MenuItem from "../util/MenuItem.svelte";
 import TodosRepo from "../../stores/TodosStore"
 import ListsStore from "../../stores/ListsStore"
 import AddListView from "./AddListView.svelte";
+import ConfirmDialog from "../common/ConfirmDialog.svelte";
+import AddTodoView from "../todo/AddTodoView.svelte";
+import App from "../../App.svelte";
+import DateInput from "../util/DateInput.svelte";
+import ErrorCard from "../common/ErrorCard.svelte";
 
 	export let list : ListWithTodos
 
 	let open = false;
 	let editOpen = false;
+
+	let confirm = {open: false, title:"", body:"", action:async()=>{}}
 </script>
 <div class="flex flex-row justify-between mt-1">
 	<h3 class="text-2xl">{list.name}</h3>
@@ -22,17 +29,18 @@ import AddListView from "./AddListView.svelte";
 			<MenuItem on:click={()=> editOpen= true}>
 				Edit Lists title
 			</MenuItem>
-			<MenuItem on:click={()=> ListsStore.deleteList(list)}>
+			<MenuItem on:click={()=> confirm = {action:()=>ListsStore.deleteList(list), title:"Deleting list", body:"Are you sure to delete this list?", open:true}}>
 				Delete List
 			</MenuItem>
 			{/if}
-			<MenuItem on:click={()=> TodosRepo.deleteAllTodos()}>
+			<MenuItem on:click={()=> confirm = {action:()=>TodosRepo.deleteAllTodos(), title:"Deleting todos", body:"Are you sure to delete all the todos of this list?", open:true} }>
 				Delete All todos
 			</MenuItem>
-			<MenuItem on:click={()=> TodosRepo.deleteAllDoneTodos()}>
+			<MenuItem on:click={()=> confirm = {action:()=>TodosRepo.deleteAllDoneTodos(), title:"Deleting todos", body:"Are you sure to delete all the done todos of this list?", open:true}}>
 				Delete All Done todos
 			</MenuItem>
 		</Menu>
 	</div>
+	<ConfirmDialog {...confirm} on:ok={()=>{confirm.action(); confirm = {...confirm, open:false}}} on:cancel={()=>confirm = {...confirm, open:false}}/>
 	<AddListView list={list} open={editOpen}/>
 </div>

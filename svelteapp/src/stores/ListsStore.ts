@@ -8,6 +8,7 @@ import { get } from 'svelte/store';
 import type { AppError } from "../models/Error";
 import { parseError } from "../api/ErrorUtil";
 import TodosRepo from "./TodosStore";
+import { navigate } from "svelte-routing";
 
 class ListRepoClass{
 	private store = writable<List[]>([])
@@ -37,6 +38,7 @@ class ListRepoClass{
 		try{
 			await RemoveList(list);
 			this.invalidate();
+			
 		}
 		catch(e){
 			this._operationError.set(parseError(e))
@@ -67,6 +69,7 @@ class ListRepoClass{
 			await UpdateList(list);
 			this.invalidate();
 			TodosRepo.invalidate();
+			navigate("/")
 		}
 		catch(e){
 			this._operationError.set(parseError(e))

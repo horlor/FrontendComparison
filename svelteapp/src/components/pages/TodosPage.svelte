@@ -9,6 +9,7 @@ import { afterUpdate } from "svelte";
 import ListHeader from "../list/ListHeader.svelte";
 import ErrorCard from "../common/ErrorCard.svelte";
 import OperationErrorHandler from "../common/OperationErrorHandler.svelte";
+import Calculate from "../common/Calculate.svelte";
 	let selected : Todo | undefined =undefined;
 let list = TodosRepo.list
 let error =  TodosRepo.error

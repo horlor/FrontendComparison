@@ -1,0 +1,30 @@
+﻿<h3>Calculate Pi: @Pi</h3>
+<h3>Time: @ms ms </h3>
+@using System.Diagnostics
+@code {
+    double Pi = 0;
+    double ms = 0;
+
+    protected override void OnInitialized()
+    {
+
+        base.OnInitialized();
+        calculate();
+    }
+
+    public void calculate()
+    {
+        var timer = new Stopwatch();
+        timer.Start();
+        Pi = 0;
+        for (int i=0; i<1000000; i++)
+        {
+
+            Pi += Math.Pow(-1, i) / (2 * i + 1);
+        }
+        Pi = 4 * Pi;
+        timer.Stop();
+        ms = timer.ElapsedMilliseconds;
+    }
+
+}
